@@ -1,76 +1,90 @@
 <template>
-  <div class="register">
-    <el-form ref="registerRef" :model="registerForm" :rules="registerRules" class="register-form">
-      <h3 class="title">{{ title }}</h3>
-      <el-form-item prop="username">
-        <el-input 
-          v-model="registerForm.username" 
-          type="text" 
-          size="large" 
-          auto-complete="off" 
-          placeholder="账号"
-        >
-          <template #prefix><svg-icon icon-class="user" class="el-input__icon input-icon" /></template>
-        </el-input>
-      </el-form-item>
-      <el-form-item prop="password" :rules="registerPwdValidator">
-        <el-input
-          v-model="registerForm.password"
-          type="password"
-          size="large" 
-          auto-complete="off"
-          placeholder="密码"
-          @keyup.enter="handleRegister"
-        >
-          <template #prefix><svg-icon icon-class="password" class="el-input__icon input-icon" /></template>
-        </el-input>
-      </el-form-item>
-      <el-form-item prop="confirmPassword">
-        <el-input
-          v-model="registerForm.confirmPassword"
-          type="password"
-          size="large" 
-          auto-complete="off"
-          placeholder="确认密码"
-          @keyup.enter="handleRegister"
-        >
-          <template #prefix><svg-icon icon-class="password" class="el-input__icon input-icon" /></template>
-        </el-input>
-      </el-form-item>
-      <el-form-item prop="code" v-if="captchaEnabled">
-        <el-input
-          size="large" 
-          v-model="registerForm.code"
-          auto-complete="off"
-          placeholder="验证码"
-          style="width: 63%"
-          @keyup.enter="handleRegister"
-        >
-          <template #prefix><svg-icon icon-class="validCode" class="el-input__icon input-icon" /></template>
-        </el-input>
-        <div class="register-code">
-          <img :src="codeUrl" @click="getCode" class="register-code-img"/>
-        </div>
-      </el-form-item>
-      <el-form-item style="width:100%;">
-        <el-button
-          :loading="loading"
-          size="large" 
-          type="primary"
-          style="width:100%;"
-          @click.prevent="handleRegister"
-        >
-          <span v-if="!loading">注 册</span>
-          <span v-else>注 册 中...</span>
-        </el-button>
-        <div style="float: right;">
-          <router-link class="link-type" :to="'/login'">使用已有账户登录</router-link>
-        </div>
-      </el-form-item>
-    </el-form>
-    <!--  底部  -->
-    <div class="el-register-footer">
-      <span>{{ footerContent }}</span>
+  <div class="auth-page">
+    <!-- 品牌信息区（移动端隐藏） -->
+    <div class="auth-brand">
+      <div class="brand-head">
+        <img :src="logo" alt="logo" class="brand-logo" />
+        <span class="brand-name">{{ title }}</span>
+      </div>
+      <div class="brand-body">
+        <h2 class="brand-title">创建账号<br />开始使用系统</h2>
+        <p class="brand-desc">注册后可使用角色权限体系内的全部功能，管理员审核通过后生效。</p>
+      </div>
+      <div class="brand-foot">{{ footerContent }}</div>
+    </div>
+
+    <!-- 注册表单区 -->
+    <div class="auth-panel">
+      <div class="auth-card">
+        <h2 class="auth-title">注册账号</h2>
+        <p class="auth-subtitle">填写以下信息创建新账号</p>
+        <el-form ref="registerRef" :model="registerForm" :rules="registerRules">
+          <el-form-item prop="username">
+            <el-input
+              v-model="registerForm.username"
+              type="text"
+              size="large"
+              auto-complete="off"
+              placeholder="账号"
+            >
+              <template #prefix><svg-icon icon-class="user" class="el-input__icon input-icon" /></template>
+            </el-input>
+          </el-form-item>
+          <el-form-item prop="password" :rules="registerPwdValidator">
+            <el-input
+              v-model="registerForm.password"
+              type="password"
+              size="large"
+              auto-complete="off"
+              placeholder="密码"
+              @keyup.enter="handleRegister"
+            >
+              <template #prefix><svg-icon icon-class="password" class="el-input__icon input-icon" /></template>
+            </el-input>
+          </el-form-item>
+          <el-form-item prop="confirmPassword">
+            <el-input
+              v-model="registerForm.confirmPassword"
+              type="password"
+              size="large"
+              auto-complete="off"
+              placeholder="确认密码"
+              @keyup.enter="handleRegister"
+            >
+              <template #prefix><svg-icon icon-class="password" class="el-input__icon input-icon" /></template>
+            </el-input>
+          </el-form-item>
+          <el-form-item prop="code" v-if="captchaEnabled" class="auth-captcha">
+            <el-input
+              size="large"
+              v-model="registerForm.code"
+              auto-complete="off"
+              placeholder="验证码"
+              class="captcha-input"
+              @keyup.enter="handleRegister"
+            >
+              <template #prefix><svg-icon icon-class="validCode" class="el-input__icon input-icon" /></template>
+            </el-input>
+            <img :src="codeUrl" @click="getCode" class="captcha-img" alt="验证码" />
+          </el-form-item>
+          <el-form-item style="width:100%;">
+            <el-button
+              :loading="loading"
+              size="large"
+              type="primary"
+              class="auth-submit"
+              @click.prevent="handleRegister"
+            >
+              <span v-if="!loading">注 册</span>
+              <span v-else>注 册 中…</span>
+            </el-button>
+          </el-form-item>
+          <div class="auth-alt">
+            <router-link class="link-type" :to="'/login'">使用已有账户登录</router-link>
+          </div>
+        </el-form>
+      </div>
+      <div class="auth-foot">{{ footerContent }}</div>
     </div>
   </div>
 </template>
@@ -80,6 +94,7 @@ import { ElMessageBox } from "element-plus"
 import { getCodeImg, register } from "@/api/login"
 import defaultSettings from '@/settings'
 import { usePasswordRule } from "@/utils/passwordRule"
+import logo from '@/assets/logo/yunshu.svg'
 
 const title = import.meta.env.VITE_APP_TITLE
 const footerContent = defaultSettings.footerContent
@@ -153,67 +168,3 @@ function getCode() {
 
 getCode()
 </script>
-
-<style lang='scss' scoped>
-.register {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100%;
-  background-image: url("../assets/images/login-background.jpg");
-  background-size: cover;
-}
-.title {
-  margin: 0px auto 30px auto;
-  text-align: center;
-  color: #707070;
-}
-
-.register-form {
-  border-radius: 6px;
-  background: #ffffff;
-  width: 400px;
-  padding: 25px 25px 5px 25px;
-  .el-input {
-    height: 40px;
-    input {
-      height: 40px;
-    }
-  }
-  .input-icon {
-    height: 39px;
-    width: 14px;
-    margin-left: 0px;
-  }
-}
-.register-tip {
-  font-size: 13px;
-  text-align: center;
-  color: #bfbfbf;
-}
-.register-code {
-  width: 33%;
-  height: 40px;
-  float: right;
-  img {
-    cursor: pointer;
-    vertical-align: middle;
-  }
-}
-.el-register-footer {
-  height: 40px;
-  line-height: 40px;
-  position: fixed;
-  bottom: 0;
-  width: 100%;
-  text-align: center;
-  color: #fff;
-  font-family: Arial;
-  font-size: 12px;
-  letter-spacing: 1px;
-}
-.register-code-img {
-  height: 40px;
-  padding-left: 12px;
-}
-</style>
