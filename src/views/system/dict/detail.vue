@@ -3,7 +3,7 @@
     <!-- 自定义标题 -->
     <template #header>
       <div class="drawer-head">
-        <el-icon style="color:#5b9bd5;margin-right:8px;"><List /></el-icon>
+        <el-icon style="color:var(--color-primary);margin-right:8px;"><List /></el-icon>
         <span class="drawer-head-name">{{ row.dictName }}</span>
         <span class="drawer-head-type">{{ row.dictType }}</span>
       </div>
@@ -161,8 +161,8 @@ function loadData() {
   font-weight: 700;
   color: var(--dict-drawer-title-color, #2c3e50);
 }
-.stat-num.success { color: #27ae60; }
-.stat-num.danger  { color: #e74c3c; }
+.stat-num.success { color: var(--color-success, #27ae60); }
+.stat-num.danger  { color: var(--color-danger, #e74c3c); }
 .stat-label {
   font-size: 11px;
   color: var(--dict-drawer-subtext-color, #95a5a6);

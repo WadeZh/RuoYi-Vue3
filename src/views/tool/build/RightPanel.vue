@@ -826,12 +826,12 @@ function tagChange(tagIcon) {
 
 .select-item {
   display: flex;
-  border: 1px dashed #fff;
+  border: 1px dashed var(--border-light, #fff);
   box-sizing: border-box;
 
   & .close-btn {
     cursor: pointer;
-    color: #f56c6c;
+    color: var(--color-danger, #f56c6c);
   }
 
   & .el-input+.el-input {
@@ -844,14 +844,14 @@ function tagChange(tagIcon) {
 }
 
 .select-item.sortable-chosen {
-  border: 1px dashed #409eff;
+  border: 1px dashed var(--color-primary, #409eff);
 }
 
 .select-line-icon {
   line-height: 32px;
   font-size: 22px;
   padding: 0 4px;
-  color: #777;
+  color: var(--text-secondary, #777);
 }
 
 .option-drag {
@@ -878,7 +878,7 @@ function tagChange(tagIcon) {
   top: 0;
   left: 0;
   cursor: pointer;
-  background: #409eff;
+  background: var(--color-primary, #409eff);
   z-index: 1;
   border-radius: 0 0 6px 0;
   justify-content: center;

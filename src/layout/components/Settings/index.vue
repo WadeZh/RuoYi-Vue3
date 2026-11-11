@@ -281,7 +281,7 @@ defineExpose({
       height: 100%;
       padding-top: 15px;
       padding-left: 24px;
-      color: #1890ff;
+      color: var(--color-primary, #1890ff);
       font-weight: 700;
       font-size: 14px;
     }

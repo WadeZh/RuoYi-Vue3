@@ -72,12 +72,12 @@ watch(key, (val) => {
     justify-content: center;
 
     &:hover {
-      background: #f2f2f2;
+      background: var(--bg-hover, #f2f2f2);
     }
 
     &.active-item {
-      background: #e1f3fb;
-      color: #7a6df0
+      background: color-mix(in srgb, var(--color-primary) 12%, transparent);
+      color: var(--color-primary, #7a6df0)
     }
 
     i {

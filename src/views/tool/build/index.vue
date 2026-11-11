@@ -314,7 +314,7 @@ onUnmounted(() => {
 </script>
 
 <style lang='scss'>
-$lighterBlue: #409EFF;
+$lighterBlue: var(--color-primary, #409EFF);
 
 .container {
   position: relative;
@@ -341,7 +341,7 @@ $lighterBlue: #409EFF;
         left: 12px;
         top: 6px;
         line-height: 30px;
-        color: #00afff;
+        color: var(--color-primary, #00afff);
         font-weight: 600;
         font-size: 17px;
         white-space: nowrap;
@@ -411,11 +411,11 @@ $lighterBlue: #409EFF;
                 }
 
                 &:hover {
-                  border: 1px dashed #787be8;
-                  color: #787be8;
+                  border: 1px dashed var(--color-primary-hover, #787be8);
+                  color: var(--color-primary-hover, #787be8);
 
                   .svg-icon {
-                    color: #787be8;
+                    color: var(--color-primary-hover, #787be8);
                   }
                 }
               }
@@ -448,7 +448,7 @@ $lighterBlue: #409EFF;
       justify-content: flex-end;
 
       u .delete-btn {
-        color: #F56C6C;
+        color: var(--color-danger, #F56C6C);
       }
     }
 
@@ -494,7 +494,7 @@ $lighterBlue: #409EFF;
                 right: 0;
                 top: 0;
                 height: 3px;
-                background: rgb(89, 89, 223);
+                background: var(--color-primary, rgb(89, 89, 223));
                 z-index: 2;
               }
             }
@@ -535,7 +535,7 @@ $lighterBlue: #409EFF;
             cursor: move;
 
             &.unfocus-bordered:not(.activeFromItem)>div:first-child {
-              border: 1px dashed #ccc;
+              border: 1px dashed var(--border-base, #ccc);
             }
 
             .el-form-item {
@@ -547,7 +547,7 @@ $lighterBlue: #409EFF;
             position: relative;
             cursor: move;
             box-sizing: border-box;
-            border: 1px dashed #ccc;
+            border: 1px dashed var(--border-base, #ccc);
             border-radius: 3px;
             padding: 0 2px;
             margin-bottom: 15px;
@@ -580,7 +580,7 @@ $lighterBlue: #409EFF;
               top: 0;
               left: 0;
               font-size: 12px;
-              color: #bbb;
+              color: var(--text-disabled, #bbb);
               display: inline-block;
               padding: 0 6px;
             }
@@ -620,7 +620,7 @@ $lighterBlue: #409EFF;
               right: 56px;
               border-color: $lighterBlue;
               color: $lighterBlue;
-              background: #fff;
+              background: var(--bg-surface, #fff);
 
               &:hover {
                 background: $lighterBlue;
@@ -630,12 +630,12 @@ $lighterBlue: #409EFF;
 
             &>.drawing-item-delete {
               right: 24px;
-              border-color: #F56C6C;
-              color: #F56C6C;
-              background: #fff;
+              border-color: var(--color-danger, #F56C6C);
+              color: var(--color-danger, #F56C6C);
+              background: var(--bg-surface, #fff);
 
               &:hover {
-                background: #F56C6C;
+                background: var(--color-danger, #F56C6C);
                 color: #fff;
               }
             }
@@ -648,7 +648,7 @@ $lighterBlue: #409EFF;
             right: 0;
             text-align: center;
             font-size: 18px;
-            color: #ccb1ea;
+            color: var(--text-disabled, #ccb1ea);
             letter-spacing: 4px;
           }
 

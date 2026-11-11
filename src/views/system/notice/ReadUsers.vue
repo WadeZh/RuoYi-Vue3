@@ -107,11 +107,11 @@ defineExpose({
 <style scoped>
 .read-stat {
   font-size: 13px;
-  color: #606266;
+  color: var(--text-regular, #606266);
   line-height: 28px;
 }
 .read-stat strong {
-  color: #409eff;
+  color: var(--color-primary, #409eff);
   font-size: 15px;
   margin: 0 2px;
 }
