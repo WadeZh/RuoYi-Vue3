@@ -11,6 +11,7 @@ let downloadLoadingInstance
 export default {
   name(name, isDelete = true) {
     var url = baseURL + "/common/download?fileName=" + encodeURIComponent(name) + "&delete=" + isDelete
+    downloadLoadingInstance = ElLoading.service({ text: "正在下载数据，请稍候", background: "rgba(0, 0, 0, 0.7)", })
     axios({
       method: 'get',
       url: url,
@@ -24,10 +25,16 @@ export default {
       } else {
         this.printErrMsg(res.data)
       }
+      downloadLoadingInstance.close()
+    }).catch((r) => {
+      console.error(r)
+      ElMessage.error('下载文件出现错误，请联系管理员！')
+      downloadLoadingInstance.close()
     })
   },
   resource(resource) {
     var url = baseURL + "/common/download/resource?resource=" + encodeURIComponent(resource)
+    downloadLoadingInstance = ElLoading.service({ text: "正在下载数据，请稍候", background: "rgba(0, 0, 0, 0.7)", })
     axios({
       method: 'get',
       url: url,
@@ -41,6 +48,11 @@ export default {
       } else {
         this.printErrMsg(res.data)
       }
+      downloadLoadingInstance.close()
+    }).catch((r) => {
+      console.error(r)
+      ElMessage.error('下载文件出现错误，请联系管理员！')
+      downloadLoadingInstance.close()
     })
   },
   zip(url, name) {

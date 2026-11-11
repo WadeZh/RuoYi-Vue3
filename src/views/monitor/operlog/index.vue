@@ -155,6 +155,7 @@
 <script setup name="Operlog">
 import OperlogDetail from './detail'
 import { list, delOperlog, cleanOperlog } from "@/api/monitor/operlog"
+import { useQueryMemory } from "@/composables/useQueryMemory"
 
 const { proxy } = getCurrentInstance()
 const { sys_oper_type, sys_common_status } = useDict("sys_oper_type", "sys_common_status")
@@ -172,9 +173,12 @@ const title = ref("")
 const dateRange = ref([])
 const defaultSort = ref({ prop: "operTime", order: "descending" })
 
+// 搜索条件记忆（会话级）
+const qm = useQueryMemory()
+
 const data = reactive({
   form: {},
-  queryParams: {
+  queryParams: qm.restore({
     pageNum: 1,
     pageSize: 10,
     operIp: undefined,
@@ -182,7 +186,7 @@ const data = reactive({
     operName: undefined,
     businessType: undefined,
     status: undefined
-  }
+  })
 })
 
 const { queryParams, form } = toRefs(data)
@@ -190,6 +194,7 @@ const { queryParams, form } = toRefs(data)
 /** 查询登录日志 */
 function getList() {
   loading.value = true
+  qm.save(queryParams.value)
   list(proxy.addDateRange(queryParams.value, dateRange.value)).then(response => {
     operlogList.value = response.rows
     total.value = response.total
@@ -207,6 +212,7 @@ function handleQuery() {
 function resetQuery() {
   dateRange.value = []
   proxy.resetForm("queryRef")
+  qm.clear()
   queryParams.value.pageNum = 1
   proxy.$refs["operlogRef"].sort(defaultSort.value.prop, defaultSort.value.order)
 }

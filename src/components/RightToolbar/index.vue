@@ -27,6 +27,19 @@
           </template>
         </el-dropdown>
       </el-tooltip>
+      <el-tooltip class="item" effect="dark" content="表格密度" placement="top">
+        <el-dropdown trigger="click" @command="setDensity" style="padding-left: 12px">
+          <el-button circle icon="Grid" />
+          <template #dropdown>
+            <el-dropdown-menu>
+              <el-dropdown-item v-for="opt in densityOptions" :key="opt.value" :command="opt.value">
+                <el-icon v-if="density === opt.value"><Check /></el-icon>
+                <span style="padding-left: 4px">{{ opt.label }}</span>
+              </el-dropdown-item>
+            </el-dropdown-menu>
+          </template>
+        </el-dropdown>
+      </el-tooltip>
     </el-row>
     <el-dialog :title="title" v-model="open" append-to-body>
       <el-transfer
@@ -76,6 +89,30 @@ const props = defineProps({
 })
 
 const emits = defineEmits(['update:showSearch', 'queryTable'])
+
+/* ---------- 表格密度（全局生效，localStorage 持久化） ---------- */
+const DENSITY_KEY = 'table-density'
+const densityOptions = [
+  { value: 'loose', label: '宽松' },
+  { value: 'default', label: '默认' },
+  { value: 'compact', label: '紧凑' }
+]
+const density = ref(cache.local.get(DENSITY_KEY) || 'default')
+
+function applyDensityClass() {
+  document.documentElement.classList.remove('table-density-loose', 'table-density-compact')
+  if (density.value === 'loose') {
+    document.documentElement.classList.add('table-density-loose')
+  } else if (density.value === 'compact') {
+    document.documentElement.classList.add('table-density-compact')
+  }
+}
+function setDensity(value) {
+  density.value = value
+  cache.local.set(DENSITY_KEY, value)
+  applyDensityClass()
+}
+applyDensityClass()
 
 // 显隐数据
 const value = ref([])
@@ -243,7 +280,7 @@ function saveStorage() {
 .check-line {
   width: 90%;
   height: 1px;
-  background-color: #ccc;
+  background-color: var(--border-base, #ccc);
   margin: 3px auto;
 }
 </style>

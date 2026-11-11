@@ -2,6 +2,7 @@ import cache from '@/plugins/cache'
 import useSettingsStore from '@/store/modules/settings'
 
 const PERSIST_KEY = 'tags-view-visited'
+const PIN_KEY = 'tags-view-pinned'
 
 function isPersistEnabled() {
   return useSettingsStore().tagsViewPersist
@@ -21,15 +22,60 @@ function clearVisitedViews() {
   cache.local.remove(PERSIST_KEY)
 }
 
+// 固定页签（用户手动固定，按 path 持久化）
+function savePinnedPaths(paths) {
+  cache.local.setJSON(PIN_KEY, paths)
+}
+
 const useTagsViewStore = defineStore(
   'tags-view',
   {
     state: () => ({
       visitedViews: [],
       cachedViews: [],
-      iframeViews: []
+      iframeViews: [],
+      pinnedPaths: cache.local.getJSON(PIN_KEY) || [],
+      // 已关闭页签历史（会话级，供「重新打开」使用）
+      closedHistory: []
     }),
     actions: {
+      isPinned(view) {
+        return !!view && this.pinnedPaths.includes(view.path)
+      },
+      togglePin(view) {
+        if (!view) return
+        const idx = this.pinnedPaths.indexOf(view.path)
+        if (idx > -1) {
+          this.pinnedPaths.splice(idx, 1)
+        } else {
+          this.pinnedPaths.push(view.path)
+        }
+        savePinnedPaths([...this.pinnedPaths])
+      },
+      // 记录已关闭页签（去重、上限 10 条）
+      pushClosedHistory(view) {
+        if (!view || (view.meta && view.meta.affix)) return
+        const entry = { path: view.path, fullPath: view.fullPath, name: view.name, title: view.title, query: view.query, meta: view.meta }
+        this.closedHistory = [entry, ...this.closedHistory.filter(h => h.path !== entry.path)].slice(0, 10)
+      },
+      // 弹出最近关闭的页签（供重新打开）
+      popClosedHistory() {
+        return this.closedHistory.shift() || null
+      },
+      // 拖拽排序：重排 visitedViews（affix 页签保持置首）
+      reorderViews({ oldIndex, newIndex }) {
+        if (oldIndex == null || newIndex == null || oldIndex === newIndex) return
+        if (oldIndex < 0 || newIndex < 0 || oldIndex >= this.visitedViews.length || newIndex >= this.visitedViews.length) return
+        const [moved] = this.visitedViews.splice(oldIndex, 1)
+        this.visitedViews.splice(newIndex, 0, moved)
+        // affix（首页）页签固定在最前
+        const affixViews = this.visitedViews.filter(v => v.meta && v.meta.affix)
+        if (affixViews.length && this.visitedViews[0] !== affixViews[0]) {
+          const affixPaths = new Set(affixViews.map(v => v.path))
+          this.visitedViews = [...affixViews, ...this.visitedViews.filter(v => !affixPaths.has(v.path))]
+        }
+        saveVisitedViews(this.visitedViews)
+      },
       addView(view) {
         this.addVisitedView(view)
         this.addCachedView(view)
@@ -78,8 +124,9 @@ const useTagsViewStore = defineStore(
       delVisitedView(view) {
         return new Promise(resolve => {
           for (const [i, v] of this.visitedViews.entries()) {
-            if (v.path === view.path) {
-              this.visitedViews.splice(i, 1)
+            if (v.path === view.path && !this.pinnedPaths.includes(v.path)) {
+              const [removed] = this.visitedViews.splice(i, 1)
+              this.pushClosedHistory(removed)
               break
             }
           }
@@ -114,7 +161,7 @@ const useTagsViewStore = defineStore(
       delOthersVisitedViews(view) {
         return new Promise(resolve => {
           this.visitedViews = this.visitedViews.filter(v => {
-            return v.meta.affix || v.path === view.path
+            return v.meta.affix || v.path === view.path || this.pinnedPaths.includes(v.path)
           })
           this.iframeViews = this.iframeViews.filter(item => item.path === view.path)
           saveVisitedViews(this.visitedViews)
@@ -144,7 +191,7 @@ const useTagsViewStore = defineStore(
       },
       delAllVisitedViews(view) {
         return new Promise(resolve => {
-          const affixTags = this.visitedViews.filter(tag => tag.meta.affix)
+          const affixTags = this.visitedViews.filter(tag => tag.meta.affix || this.pinnedPaths.includes(tag.path))
           this.visitedViews = affixTags
           this.iframeViews = []
           clearVisitedViews()
@@ -172,7 +219,7 @@ const useTagsViewStore = defineStore(
             return
           }
           this.visitedViews = this.visitedViews.filter((item, idx) => {
-            if (idx <= index || (item.meta && item.meta.affix)) {
+            if (idx <= index || (item.meta && item.meta.affix) || this.pinnedPaths.includes(item.path)) {
               return true
             }
             const i = this.cachedViews.indexOf(item.name)
@@ -196,7 +243,7 @@ const useTagsViewStore = defineStore(
             return
           }
           this.visitedViews = this.visitedViews.filter((item, idx) => {
-            if (idx >= index || (item.meta && item.meta.affix)) {
+            if (idx >= index || (item.meta && item.meta.affix) || this.pinnedPaths.includes(item.path)) {
               return true
             }
             const i = this.cachedViews.indexOf(item.name)

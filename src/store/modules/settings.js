@@ -3,10 +3,15 @@ import { useDark, useToggle } from '@vueuse/core'
 import { useDynamicTitle } from '@/utils/dynamicTitle'
 import { handleThemeStyle } from '@/utils/theme'
 
+// 默认白色主题：首次访问（无本地偏好）时不跟随系统深色
+const DARK_SCHEME_KEY = 'vueuse-color-scheme'
+if (localStorage.getItem(DARK_SCHEME_KEY) == null && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+  localStorage.setItem(DARK_SCHEME_KEY, 'light')
+}
 const isDark = useDark()
 const toggleDark = useToggle(isDark)
 
-const { sideTheme, showSettings, navType, tagsView, tagsViewPersist, tagsIcon, tagsViewStyle, fixedHeader, sidebarLogo, dynamicTitle, footerVisible, footerContent } = defaultSettings
+const { sideTheme, showSettings, navType, tagsView, tagsViewPersist, tagsIcon, tagsViewStyle, fixedHeader, sidebarLogo, dynamicTitle, footerVisible, footerContent, autoLockEnabled, autoLockMinutes } = defaultSettings
 
 const storageSetting = JSON.parse(localStorage.getItem('layout-setting')) || ''
 
@@ -15,7 +20,7 @@ const useSettingsStore = defineStore(
   {
     state: () => ({
       title: '',
-      theme: storageSetting.theme || '#409EFF',
+      theme: storageSetting.theme || '#2563EB',
       sideTheme: storageSetting.sideTheme || sideTheme,
       showSettings: showSettings,
       navType: storageSetting.navType === undefined ? navType : storageSetting.navType,
@@ -28,6 +33,8 @@ const useSettingsStore = defineStore(
       dynamicTitle: storageSetting.dynamicTitle === undefined ? dynamicTitle : storageSetting.dynamicTitle,
       footerVisible: storageSetting.footerVisible === undefined ? footerVisible : storageSetting.footerVisible,
       footerContent: footerContent,
+      autoLockEnabled: storageSetting.autoLockEnabled === undefined ? autoLockEnabled : storageSetting.autoLockEnabled,
+      autoLockMinutes: storageSetting.autoLockMinutes === undefined ? autoLockMinutes : storageSetting.autoLockMinutes,
       isDark: isDark.value
     }),
     actions: {

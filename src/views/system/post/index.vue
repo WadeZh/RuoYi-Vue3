@@ -146,6 +146,10 @@
 
 <script setup name="Post">
 import { listPost, addPost, delPost, getPost, updatePost } from "@/api/system/post"
+import { useQueryMemory } from "@/composables/useQueryMemory"
+
+// 搜索条件记忆（会话级）
+const qm = useQueryMemory()
 
 const { proxy } = getCurrentInstance()
 const { sys_normal_disable } = useDict("sys_normal_disable")
@@ -162,13 +166,13 @@ const title = ref("")
 
 const data = reactive({
   form: {},
-  queryParams: {
+  queryParams: qm.restore({
     pageNum: 1,
     pageSize: 10,
     postCode: undefined,
     postName: undefined,
     status: undefined
-  },
+  }),
   rules: {
     postName: [{ required: true, message: "岗位名称不能为空", trigger: "blur" }],
     postCode: [{ required: true, message: "岗位编码不能为空", trigger: "blur" }],
@@ -181,6 +185,7 @@ const { queryParams, form, rules } = toRefs(data)
 /** 查询岗位列表 */
 function getList() {
   loading.value = true
+  qm.save(queryParams.value)
   listPost(queryParams.value).then(response => {
     postList.value = response.rows
     total.value = response.total
@@ -216,6 +221,7 @@ function handleQuery() {
 /** 重置按钮操作 */
 function resetQuery() {
   proxy.resetForm("queryRef")
+  qm.clear()
   handleQuery()
 }
 

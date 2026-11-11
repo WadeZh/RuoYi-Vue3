@@ -307,6 +307,7 @@
 
 <script setup name="Menu">
 import { addMenu, delMenu, getMenu, listMenu, updateMenu, updateMenuSort } from "@/api/system/menu"
+import { useQueryMemory } from "@/composables/useQueryMemory"
 import SvgIcon from "@/components/SvgIcon"
 import IconSelect from "@/components/IconSelect"
 
@@ -323,13 +324,15 @@ const isExpandAll = ref(false)
 const refreshTable = ref(true)
 const iconSelectRef = ref(null)
 const originalOrders = ref({})
+// 搜索条件记忆（会话级）
+const qm = useQueryMemory()
 
 const data = reactive({
   form: {},
-  queryParams: {
+  queryParams: qm.restore({
     menuName: undefined,
     visible: undefined
-  },
+  }),
   rules: {
     menuName: [{ required: true, message: "菜单名称不能为空", trigger: "blur" }],
     orderNum: [{ required: true, message: "菜单顺序不能为空", trigger: "blur" }],
@@ -342,6 +345,7 @@ const { queryParams, form, rules } = toRefs(data)
 /** 查询菜单列表 */
 function getList() {
   loading.value = true
+  qm.save(queryParams.value)
   listMenu(queryParams.value).then(response => {
     menuList.value = proxy.handleTree(response.data, "menuId")
     recordOriginalOrders(menuList.value)
@@ -400,6 +404,7 @@ function handleQuery() {
 /** 重置按钮操作 */
 function resetQuery() {
   proxy.resetForm("queryRef")
+  qm.clear()
   handleQuery()
 }
 

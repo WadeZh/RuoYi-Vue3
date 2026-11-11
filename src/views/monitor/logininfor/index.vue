@@ -126,6 +126,7 @@
 
 <script setup name="Logininfor">
 import { list, delLogininfor, cleanLogininfor, unlockLogininfor } from "@/api/monitor/logininfor"
+import { useQueryMemory } from "@/composables/useQueryMemory"
 
 const { proxy } = getCurrentInstance()
 const { sys_common_status } = useDict("sys_common_status")
@@ -141,8 +142,11 @@ const total = ref(0)
 const dateRange = ref([])
 const defaultSort = ref({ prop: "loginTime", order: "descending" })
 
+// 搜索条件记忆（会话级）
+const qm = useQueryMemory()
+
 // 查询参数
-const queryParams = ref({
+const queryParams = ref(qm.restore({
   pageNum: 1,
   pageSize: 10,
   ipaddr: undefined,
@@ -150,11 +154,12 @@ const queryParams = ref({
   status: undefined,
   orderByColumn: undefined,
   isAsc: undefined
-})
+}))
 
 /** 查询登录日志列表 */
 function getList() {
   loading.value = true
+  qm.save(queryParams.value)
   list(proxy.addDateRange(queryParams.value, dateRange.value)).then(response => {
     logininforList.value = response.rows
     total.value = response.total
@@ -172,6 +177,7 @@ function handleQuery() {
 function resetQuery() {
   dateRange.value = []
   proxy.resetForm("queryRef")
+  qm.clear()
   queryParams.value.pageNum = 1
   proxy.$refs["logininforRef"].sort(defaultSort.value.prop, defaultSort.value.order)
 }

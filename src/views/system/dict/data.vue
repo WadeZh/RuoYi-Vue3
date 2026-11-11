@@ -179,6 +179,10 @@
 import useDictStore from '@/store/modules/dict'
 import { optionselect as getDictOptionselect, getType } from "@/api/system/dict/type"
 import { listData, getData, delData, addData, updateData } from "@/api/system/dict/data"
+import { useQueryMemory } from "@/composables/useQueryMemory"
+
+// 搜索条件记忆（会话级）
+const qm = useQueryMemory()
 
 const { proxy } = getCurrentInstance()
 const { sys_normal_disable } = useDict("sys_normal_disable")
@@ -207,13 +211,13 @@ const listClassOptions = ref([
 
 const data = reactive({
   form: {},
-  queryParams: {
+  queryParams: qm.restore({
     pageNum: 1,
     pageSize: 10,
     dictType: undefined,
     dictLabel: undefined,
     status: undefined
-  },
+  }),
   rules: {
     dictLabel: [{ required: true, message: "数据标签不能为空", trigger: "blur" }],
     dictValue: [{ required: true, message: "数据键值不能为空", trigger: "blur" }],
@@ -242,6 +246,7 @@ function getTypeList() {
 /** 查询字典数据列表 */
 function getList() {
   loading.value = true
+  qm.save(queryParams.value)
   listData(queryParams.value).then(response => {
     dataList.value = response.rows
     total.value = response.total
@@ -285,6 +290,7 @@ function handleClose() {
 /** 重置按钮操作 */
 function resetQuery() {
   proxy.resetForm("queryRef")
+  qm.clear()
   queryParams.value.dictType = defaultDictType.value
   handleQuery()
 }

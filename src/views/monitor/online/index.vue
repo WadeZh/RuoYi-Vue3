@@ -59,23 +59,29 @@
 
 <script setup name="Online">
 import { forceLogout, list as initData } from "@/api/monitor/online"
+import { useQueryMemory } from "@/composables/useQueryMemory"
 
 const { proxy } = getCurrentInstance()
+
+// 搜索条件记忆（会话级）
+const qm = useQueryMemory()
+const savedQuery = qm.restore({ ipaddr: undefined, userName: undefined, pageNum: 1, pageSize: 10 })
 
 const onlineList = ref([])
 const loading = ref(true)
 const total = ref(0)
-const pageNum = ref(1)
-const pageSize = ref(10)
+const pageNum = ref(savedQuery.pageNum)
+const pageSize = ref(savedQuery.pageSize)
 
 const queryParams = ref({
-  ipaddr: undefined,
-  userName: undefined
+  ipaddr: savedQuery.ipaddr,
+  userName: savedQuery.userName
 })
 
 /** 查询登录日志列表 */
 function getList() {
   loading.value = true
+  qm.save({ ...queryParams.value, pageNum: pageNum.value, pageSize: pageSize.value })
   initData(queryParams.value).then(response => {
     onlineList.value = response.rows
     total.value = response.total
@@ -92,6 +98,7 @@ function handleQuery() {
 /** 重置按钮操作 */
 function resetQuery() {
   proxy.resetForm("queryRef")
+  qm.clear()
   handleQuery()
 }
 

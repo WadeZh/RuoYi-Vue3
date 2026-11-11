@@ -30,6 +30,29 @@
       <div class="result-wrap">
         <el-scrollbar>
 
+          <!-- 最近访问（空查询时展示） -->
+          <template v-if="!search && historyList.length > 0">
+            <div class="history-group">
+              <div class="group-title">最近访问</div>
+              <div
+                class="search-item history-item"
+                tabindex="1"
+                v-for="item in historyList"
+                :key="'h-' + item.path"
+                @click="change(item)"
+              >
+                <div class="left">
+                  <svg-icon class="menu-icon" :icon-class="item.icon || 'component'" />
+                </div>
+                <div class="search-info">
+                  <div class="menu-title">{{ (item.title || []).join(' / ') }}</div>
+                  <div class="menu-path">{{ item.path }}</div>
+                </div>
+                <el-icon class="history-remove" title="移除" @click.stop="removeHistory(item)"><Close /></el-icon>
+              </div>
+            </div>
+          </template>
+
           <template v-if="options.length > 0">
             <div
               class="search-item"
@@ -63,6 +86,9 @@
 
       <div class="search-footer">
         <span class="shortcut-item">
+          <kbd>Ctrl</kbd><kbd>K</kbd> 唤起
+        </span>
+        <span class="shortcut-item">
           <kbd>↑</kbd><kbd>↓</kbd> 切换
         </span>
         <span class="shortcut-item">
@@ -78,6 +104,7 @@
 
 <script setup>
 import Fuse from 'fuse.js'
+import cache from '@/plugins/cache'
 import { getNormalPath } from '@/utils/ruoyi'
 import { isHttp } from '@/utils/validate'
 import useSettingsStore from '@/store/modules/settings'
@@ -92,7 +119,37 @@ const fuse = ref(undefined)
 const headerSearchSelectRef = ref(null)
 const router = useRouter()
 const theme = computed(() => useSettingsStore().theme)
-const routes = computed(() => usePermissionStore().defaultRoutes)
+// 使用 sidebarRouters（含登录后动态分配的菜单），而不是仅静态路由
+const routes = computed(() => usePermissionStore().sidebarRouters)
+
+/* ---------- 搜索历史（最近访问，localStorage 持久化） ---------- */
+const HISTORY_KEY = 'search-history'
+const HISTORY_LIMIT = 8
+const historyList = ref(cache.local.getJSON(HISTORY_KEY) || [])
+
+function addHistory(item) {
+  const entry = { path: item.path, title: item.title, icon: item.icon, query: item.query }
+  historyList.value = [entry, ...historyList.value.filter(h => h.path !== entry.path)].slice(0, HISTORY_LIMIT)
+  cache.local.setJSON(HISTORY_KEY, historyList.value)
+}
+function removeHistory(item) {
+  historyList.value = historyList.value.filter(h => h.path !== item.path)
+  cache.local.setJSON(HISTORY_KEY, historyList.value)
+}
+
+/* ---------- Ctrl+K / Cmd+K 快捷键唤起 ---------- */
+function onGlobalKeydown(e) {
+  if ((e.ctrlKey || e.metaKey) && (e.key === 'k' || e.key === 'K')) {
+    e.preventDefault()
+    if (!show.value) {
+      click()
+    } else {
+      close()
+    }
+  }
+}
+onMounted(() => window.addEventListener('keydown', onGlobalKeydown))
+onBeforeUnmount(() => window.removeEventListener('keydown', onGlobalKeydown))
 
 function click() {
   show.value = !show.value
@@ -128,6 +185,9 @@ function change(val) {
     } else {
       router.push(p)
     }
+  }
+  if (!isHttp(p)) {
+    addHistory(val)
   }
   search.value = ''
   options.value = searchPool.value
@@ -243,7 +303,11 @@ onMounted(() => {
 watch(searchPool, (list) => {
   initFuse(list)
 })
-</script>
+
+// 动态路由登录后异步生成，需监听重建搜索池
+watch(routes, (list) => {
+  searchPool.value = generateRoutes(list)
+}, { immediate: false })</script>
 
 <style lang='scss' scoped>
 :deep(.el-dialog__header) {
@@ -251,7 +315,7 @@ watch(searchPool, (list) => {
 }
 
 :deep(.highlight) {
-  color: red;
+  color: var(--color-danger, red);
   font-weight: 600;
 }
 
@@ -271,10 +335,10 @@ watch(searchPool, (list) => {
 .result-count {
   padding: 6px 16px 0;
   font-size: 12px;
-  color: #aaa;
+  color: var(--text-secondary, #aaa);
 
   strong {
-    color: red;
+    color: var(--color-danger, red);
     font-weight: 600;
   }
 }
@@ -321,7 +385,7 @@ watch(searchPool, (list) => {
       }
 
       .menu-path {
-        color: #ccc;
+        color: var(--text-disabled, #ccc);
         font-size: 10px;
       }
     }
@@ -329,6 +393,31 @@ watch(searchPool, (list) => {
 
   .search-item:hover {
     cursor: pointer;
+  }
+
+  .history-group {
+    .group-title {
+      padding: 8px 16px 4px;
+      font-size: 12px;
+      color: var(--text-secondary, #999);
+    }
+
+    .history-item {
+      padding-left: 10px;
+
+      .history-remove {
+        flex-shrink: 0;
+        padding: 6px;
+        color: var(--text-disabled, #bbb);
+        cursor: pointer;
+        border-radius: 4px;
+
+        &:hover {
+          color: var(--color-danger, #f56c6c);
+          background: var(--bg-hover, #f5f5f5);
+        }
+      }
+    }
   }
 
   .empty-state {
@@ -340,23 +429,23 @@ watch(searchPool, (list) => {
 
     .empty-icon {
       font-size: 42px;
-      color: #e0e0e0;
+      color: var(--text-disabled, #e0e0e0);
       margin-bottom: 14px;
     }
 
     .empty-text {
       font-size: 14px;
-      color: #999;
+      color: var(--text-secondary, #999);
       margin: 0 0 6px;
 
       strong {
-        color: #666;
+        color: var(--text-regular, #666);
       }
     }
 
     .empty-tip {
       font-size: 12px;
-      color: #bbb;
+      color: var(--text-disabled, #bbb);
       margin: 0;
     }
   }
@@ -367,8 +456,8 @@ watch(searchPool, (list) => {
   align-items: center;
   gap: 28px;
   padding: 10px 20px;
-  border-top: 1px solid #f0f0f0;
-  color: #999;
+  border-top: 1px solid var(--border-lighter, #f0f0f0);
+  color: var(--text-secondary, #999);
   font-size: 12px;
 
   .shortcut-item {
@@ -384,14 +473,14 @@ watch(searchPool, (list) => {
     min-width: 20px;
     height: 20px;
     padding: 0 5px;
-    border: 1px solid #ddd;
+    border: 1px solid var(--border-base, #ddd);
     border-radius: 4px;
-    background: #f7f7f7;
-    color: #555;
+    background: var(--bg-surface-2, #f7f7f7);
+    color: var(--text-regular, #555);
     font-size: 11px;
     font-family: inherit;
     line-height: 1;
-    box-shadow: 0 1px 0 #ccc;
+    box-shadow: 0 1px 0 var(--border-base, #ccc);
   }
 }
 </style>

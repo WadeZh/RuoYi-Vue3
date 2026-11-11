@@ -244,6 +244,7 @@
 <script setup name="Role">
 import { addRole, changeRoleStatus, dataScope, delRole, getRole, listRole, updateRole, deptTreeSelect } from "@/api/system/role"
 import { roleMenuTreeselect, treeselect as menuTreeselect } from "@/api/system/menu"
+import { useQueryMemory } from "@/composables/useQueryMemory"
 
 const router = useRouter()
 const { proxy } = getCurrentInstance()
@@ -268,6 +269,8 @@ const deptOptions = ref([])
 const openDataScope = ref(false)
 const menuRef = ref(null)
 const deptRef = ref(null)
+// 搜索条件记忆（会话级）
+const qm = useQueryMemory()
 
 /** 数据范围选项*/
 const dataScopeOptions = ref([
@@ -280,13 +283,13 @@ const dataScopeOptions = ref([
 
 const data = reactive({
   form: {},
-  queryParams: {
+  queryParams: qm.restore({
     pageNum: 1,
     pageSize: 10,
     roleName: undefined,
     roleKey: undefined,
     status: undefined
-  },
+  }),
   rules: {
     roleName: [{ required: true, message: "角色名称不能为空", trigger: "blur" }],
     roleKey: [{ required: true, message: "权限字符不能为空", trigger: "blur" }],
@@ -299,6 +302,7 @@ const { queryParams, form, rules } = toRefs(data)
 /** 查询角色列表 */
 function getList() {
   loading.value = true
+  qm.save(queryParams.value)
   listRole(proxy.addDateRange(queryParams.value, dateRange.value)).then(response => {
     roleList.value = response.rows
     total.value = response.total
@@ -316,6 +320,7 @@ function handleQuery() {
 function resetQuery() {
   dateRange.value = []
   proxy.resetForm("queryRef")
+  qm.clear()
   handleQuery()
 }
 

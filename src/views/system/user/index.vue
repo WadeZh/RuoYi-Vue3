@@ -32,6 +32,12 @@
             <el-button type="success" plain icon="Edit" :disabled="single" @click="handleUpdate" v-hasPermi="['system:user:edit']">修改</el-button>
           </el-col>
           <el-col :span="1.5">
+            <el-button type="success" plain icon="CircleCheck" :disabled="multiple" @click="handleBatchStatus('0')" v-hasPermi="['system:user:edit']">启用</el-button>
+          </el-col>
+          <el-col :span="1.5">
+            <el-button type="warning" plain icon="CircleClose" :disabled="multiple" @click="handleBatchStatus('1')" v-hasPermi="['system:user:edit']">停用</el-button>
+          </el-col>
+          <el-col :span="1.5">
             <el-button type="danger" plain icon="Delete" :disabled="multiple" @click="handleDelete" v-hasPermi="['system:user:remove']">删除</el-button>
           </el-col>
           <el-col :span="1.5">
@@ -40,7 +46,7 @@
           <el-col :span="1.5">
             <el-button type="warning" plain icon="Download" @click="handleExport" v-hasPermi="['system:user:export']">导出</el-button>
           </el-col>
-          <right-toolbar v-model:showSearch="showSearch" @queryTable="getList" :columns="columns" storageKey="xxxxxxxx"></right-toolbar>
+          <right-toolbar v-model:showSearch="showSearch" @queryTable="getList" :columns="columns" storageKey="user-columns"></right-toolbar>
         </el-row>
 
         <el-table v-loading="loading" :data="userList" @selection-change="handleSelectionChange">
@@ -189,6 +195,7 @@ import TreePanel from "@/components/TreePanel"
 import ExcelImportDialog from "@/components/ExcelImportDialog"
 import UserViewDrawer from "./view"
 import { usePasswordRule } from "@/utils/passwordRule"
+import { useQueryMemory } from "@/composables/useQueryMemory"
 import { changeUserStatus, listUser, resetUserPwd, delUser, getUser, updateUser, addUser, deptTreeSelect } from "@/api/system/user"
 
 const router = useRouter()
@@ -209,6 +216,8 @@ const dateRange = ref([])
 const deptOptions = ref(undefined)
 const enabledDeptOptions = ref(undefined)
 const initPassword = ref(undefined)
+// 搜索条件记忆（会话级）
+const qm = useQueryMemory()
 const postOptions = ref([])
 const roleOptions = ref([])
 // 列显隐信息
@@ -224,14 +233,14 @@ const columns = ref({
 
 const data = reactive({
   form: {},
-  queryParams: {
+  queryParams: qm.restore({
     pageNum: 1,
     pageSize: 10,
     userName: undefined,
     phonenumber: undefined,
     status: undefined,
     deptId: undefined
-  },
+  }),
   rules: {
     userName: [{ required: true, message: "用户名称不能为空", trigger: "blur" }, { min: 2, max: 20, message: "用户名称长度必须介于 2 和 20 之间", trigger: "blur" }],
     nickName: [{ required: true, message: "用户昵称不能为空", trigger: "blur" }],
@@ -245,6 +254,7 @@ const { queryParams, form, rules } = toRefs(data)
 /** 查询用户列表 */
 function getList() {
   loading.value = true
+  qm.save(queryParams.value)
   listUser(proxy.addDateRange(queryParams.value, dateRange.value)).then(res => {
     loading.value = false
     userList.value = res.rows
@@ -289,6 +299,7 @@ function handleQuery() {
 function resetQuery() {
   dateRange.value = []
   proxy.resetForm("queryRef")
+  qm.clear()
   queryParams.value.deptId = undefined
   proxy.$refs.deptTreeRef.setCurrentKey(null)
   handleQuery()
@@ -322,6 +333,27 @@ function handleStatusChange(row) {
   }).catch(function () {
     row.status = row.status === "0" ? "1" : "0"
   })
+}
+
+/** 批量启用/停用（接口为单个调用，逐个执行；跳过超级管理员） */
+function handleBatchStatus(status) {
+  const userIds = ids.value.filter(id => id !== 1)
+  if (!userIds.length) {
+    proxy.$modal.msgWarning("所选用户中无可操作项（超级管理员不可修改）")
+    return
+  }
+  const text = status === "0" ? "启用" : "停用"
+  proxy.$modal.confirm('确认要批量"' + text + '"选中的 ' + userIds.length + ' 个用户吗?').then(function () {
+    return Promise.allSettled(userIds.map(id => changeUserStatus(id, status)))
+  }).then((results) => {
+    const failed = results.filter(r => r.status === "rejected").length
+    if (failed) {
+      proxy.$modal.msgWarning(text + "完成，其中 " + failed + " 个用户操作失败")
+    } else {
+      proxy.$modal.msgSuccess(text + "成功")
+    }
+    getList()
+  }).catch(function () { })
 }
 
 /** 更多操作 */

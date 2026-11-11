@@ -184,6 +184,10 @@
 import DictDataDrawer from './detail'
 import useDictStore from '@/store/modules/dict'
 import { listType, getType, delType, addType, updateType, refreshCache } from "@/api/system/dict/type"
+import { useQueryMemory } from "@/composables/useQueryMemory"
+
+// 搜索条件记忆（会话级）
+const qm = useQueryMemory()
 
 const { proxy } = getCurrentInstance()
 const { sys_normal_disable } = useDict("sys_normal_disable")
@@ -203,13 +207,13 @@ const drawerRow = ref({})
 
 const data = reactive({
   form: {},
-  queryParams: {
+  queryParams: qm.restore({
     pageNum: 1,
     pageSize: 10,
     dictName: undefined,
     dictType: undefined,
     status: undefined
-  },
+  }),
   rules: {
     dictName: [{ required: true, message: "字典名称不能为空", trigger: "blur" }],
     dictType: [{ required: true, message: "字典类型不能为空", trigger: "blur" }]
@@ -221,6 +225,7 @@ const { queryParams, form, rules } = toRefs(data)
 /** 查询字典类型列表 */
 function getList() {
   loading.value = true
+  qm.save(queryParams.value)
   listType(proxy.addDateRange(queryParams.value, dateRange.value)).then(response => {
     typeList.value = response.rows
     total.value = response.total
@@ -256,6 +261,7 @@ function handleQuery() {
 function resetQuery() {
   dateRange.value = []
   proxy.resetForm("queryRef")
+  qm.clear()
   handleQuery()
 }
 

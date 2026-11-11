@@ -164,6 +164,10 @@
 import NoticeDetailView from "@/layout/components/HeaderNotice/DetailView"
 import ReadUsersDialog from "./ReadUsers"
 import { listNotice, getNotice, delNotice, addNotice, updateNotice } from "@/api/system/notice"
+import { useQueryMemory } from "@/composables/useQueryMemory"
+
+// 搜索条件记忆（会话级）
+const qm = useQueryMemory()
 
 const { proxy } = getCurrentInstance()
 const { sys_notice_status, sys_notice_type } = useDict("sys_notice_status", "sys_notice_type")
@@ -180,13 +184,13 @@ const title = ref("")
 
 const data = reactive({
   form: {},
-  queryParams: {
+  queryParams: qm.restore({
     pageNum: 1,
     pageSize: 10,
     noticeTitle: undefined,
     createBy: undefined,
     status: undefined
-  },
+  }),
   rules: {
     noticeTitle: [{ required: true, message: "公告标题不能为空", trigger: "blur" }],
     noticeType: [{ required: true, message: "公告类型不能为空", trigger: "change" }]
@@ -198,6 +202,7 @@ const { queryParams, form, rules } = toRefs(data)
 /** 查询公告列表 */
 function getList() {
   loading.value = true
+  qm.save(queryParams.value)
   listNotice(queryParams.value).then(response => {
     noticeList.value = response.rows
     total.value = response.total
@@ -232,6 +237,7 @@ function handleQuery() {
 /** 重置按钮操作 */
 function resetQuery() {
   proxy.resetForm("queryRef")
+  qm.clear()
   handleQuery()
 }
 

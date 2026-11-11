@@ -166,6 +166,10 @@
 
 <script setup name="Config">
 import { listConfig, getConfig, delConfig, addConfig, updateConfig, refreshCache } from "@/api/system/config"
+import { useQueryMemory } from "@/composables/useQueryMemory"
+
+// 搜索条件记忆（会话级）
+const qm = useQueryMemory()
 
 const { proxy } = getCurrentInstance()
 const { sys_yes_no } = useDict("sys_yes_no")
@@ -183,13 +187,13 @@ const dateRange = ref([])
 
 const data = reactive({
   form: {},
-  queryParams: {
+  queryParams: qm.restore({
     pageNum: 1,
     pageSize: 10,
     configName: undefined,
     configKey: undefined,
     configType: undefined
-  },
+  }),
   rules: {
     configName: [{ required: true, message: "参数名称不能为空", trigger: "blur" }],
     configKey: [{ required: true, message: "参数键名不能为空", trigger: "blur" }],
@@ -202,6 +206,7 @@ const { queryParams, form, rules } = toRefs(data)
 /** 查询参数列表 */
 function getList() {
   loading.value = true
+  qm.save(queryParams.value)
   listConfig(proxy.addDateRange(queryParams.value, dateRange.value)).then(response => {
     configList.value = response.rows
     total.value = response.total
@@ -238,6 +243,7 @@ function handleQuery() {
 function resetQuery() {
   dateRange.value = []
   proxy.resetForm("queryRef")
+  qm.clear()
   handleQuery()
 }
 
