@@ -1,0 +1,250 @@
+/* Hallmark · v2.0.0 · redesign: full · scope: app
+ * 登录 / 注册共用视觉：左侧品牌区（深色 Slate）+ 右侧表单区。
+ * 992px 以下隐藏品牌区，表单区自适应全宽。
+ */
+
+.auth-page {
+  display: flex;
+  min-height: 100%;
+  background: var(--bg-page);
+
+  /* ---------- 左侧品牌区 ---------- */
+  .auth-brand {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    width: 44%;
+    max-width: 560px;
+    padding: var(--space-12) var(--space-10);
+    background: var(--neutral-900);
+    color: #ffffff;
+    overflow: hidden;
+
+    /* 单一蓝色低饱和光晕，克制装饰 */
+    &::before {
+      content: '';
+      position: absolute;
+      top: -20%;
+      left: -10%;
+      width: 480px;
+      height: 480px;
+      border-radius: 50%;
+      background: radial-gradient(closest-side, rgba(37, 99, 235, 0.22), transparent 70%);
+      pointer-events: none;
+    }
+
+    .brand-head {
+      display: flex;
+      align-items: center;
+      gap: var(--space-3);
+    }
+
+    .brand-logo {
+      width: 36px;
+      height: 36px;
+      border-radius: var(--radius-md);
+    }
+
+    .brand-name {
+      margin: 0;
+      font-size: var(--text-lg);
+      font-weight: var(--weight-semibold);
+      color: #ffffff;
+      letter-spacing: 0.01em;
+    }
+
+    .brand-body {
+      position: relative;
+
+      .brand-title {
+        margin: 0 0 var(--space-3);
+        font-size: 28px;
+        font-weight: var(--weight-semibold);
+        line-height: 1.35;
+        color: #ffffff;
+      }
+
+      .brand-desc {
+        margin: 0 0 var(--space-8);
+        max-width: 380px;
+        font-size: var(--text-md);
+        line-height: 1.75;
+        color: var(--neutral-400);
+      }
+
+      .brand-points {
+        margin: 0;
+        padding: 0;
+        list-style: none;
+        display: grid;
+        gap: var(--space-3);
+
+        li {
+          display: flex;
+          align-items: center;
+          gap: var(--space-3);
+          font-size: var(--text-base);
+          color: var(--neutral-300);
+
+          .el-icon {
+            flex-shrink: 0;
+            width: 20px;
+            height: 20px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            background: rgba(59, 130, 246, 0.16);
+            color: var(--brand-300);
+            font-size: 12px;
+          }
+        }
+      }
+    }
+
+    .brand-foot {
+      font-size: var(--text-xs);
+      color: var(--neutral-500);
+    }
+  }
+
+  /* ---------- 右侧表单区 ---------- */
+  .auth-panel {
+    position: relative;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: var(--space-10) var(--space-6);
+
+    .auth-card {
+      width: 100%;
+      max-width: 400px;
+
+      .auth-title {
+        margin: 0 0 var(--space-2);
+        font-size: var(--text-2xl);
+        font-weight: var(--weight-semibold);
+        color: var(--text-primary);
+      }
+
+      .auth-subtitle {
+        margin: 0 0 var(--space-6);
+        font-size: var(--text-base);
+        color: var(--text-secondary);
+      }
+    }
+
+    .el-input {
+      height: 42px;
+
+      .el-input__wrapper {
+        padding: 1px 14px;
+      }
+
+      input {
+        height: 42px;
+      }
+    }
+
+    .input-icon {
+      height: 40px;
+      width: 14px;
+      margin-left: 0;
+      color: var(--text-secondary);
+    }
+
+    .auth-options {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin: 0 0 var(--space-5);
+    }
+
+    .auth-captcha {
+      display: flex;
+      gap: var(--space-3);
+
+      .el-form-item__content {
+        display: flex;
+        gap: var(--space-3);
+        width: 100%;
+      }
+
+      .captcha-input {
+        flex: 1;
+
+        .el-input {
+          width: 100%;
+        }
+      }
+
+      .captcha-img {
+        height: 42px;
+        width: 110px;
+        flex-shrink: 0;
+        border-radius: var(--radius-md);
+        border: 1px solid var(--border-base);
+        cursor: pointer;
+        object-fit: cover;
+      }
+    }
+
+    .auth-submit {
+      width: 100%;
+      height: 42px;
+      font-size: var(--text-md);
+    }
+
+    .auth-alt {
+      margin-top: var(--space-4);
+      text-align: right;
+
+      a {
+        font-size: var(--text-sm);
+        color: var(--color-primary);
+
+        &:hover {
+          color: var(--color-primary-hover);
+        }
+      }
+    }
+
+    .auth-foot {
+      position: absolute;
+      bottom: var(--space-5);
+      font-size: var(--text-xs);
+      color: var(--text-disabled);
+      letter-spacing: 0.02em;
+    }
+  }
+
+  /* ---------- 移动端 ---------- */
+  @media (max-width: 991px) {
+    .auth-brand {
+      display: none;
+    }
+
+    .auth-panel {
+      padding: var(--space-8) var(--space-5);
+    }
+  }
+
+  /* ---------- 暗色 ---------- */
+  html.dark & {
+    .auth-brand {
+      background: #0a101e;
+    }
+
+    .auth-panel .auth-card .auth-title {
+      color: var(--text-primary);
+    }
+  }
+}
+
+/* 登录失败内联错误提示 */
+.auth-card .login-error-alert {
+  margin-bottom: 16px;
+}

@@ -1,9 +1,20 @@
+/* Hallmark · v2.0.0 · redesign: full · scope: app
+ * 全局样式入口：tokens（设计规范）→ 基础 → 组件覆写 → 布局 → 业务
+ */
+@use './tokens.scss';
 @use './mixin.scss';
 @use './transition.scss';
 @use './element-ui.scss';
+@use './element-plus.scss';
+@use './auth.scss';
 @use './sidebar.scss';
 @use './btn.scss';
 @use './ruoyi.scss';
+
+html {
+  height: 100%;
+  box-sizing: border-box;
+}
 
 body {
   height: 100%;
@@ -11,16 +22,14 @@ body {
   -moz-osx-font-smoothing: grayscale;
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
-  font-family: Helvetica Neue, Helvetica, PingFang SC, Hiragino Sans GB, Microsoft YaHei, Arial, sans-serif;
+  font-family: var(--font-sans);
+  font-size: var(--text-base);
+  color: var(--text-primary);
+  background-color: var(--bg-page);
 }
 
 label {
   font-weight: 700;
-}
-
-html {
-  height: 100%;
-  box-sizing: border-box;
 }
 
 #app {
@@ -98,35 +107,35 @@ div:focus {
 }
 
 aside {
-  background: #eef1f6;
-  padding: 8px 24px;
-  margin-bottom: 20px;
-  border-radius: 2px;
+  background: var(--bg-muted);
+  padding: var(--space-2) var(--space-6);
+  margin-bottom: var(--space-5);
+  border-radius: var(--radius-md);
   display: block;
   line-height: 32px;
-  font-size: 16px;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
-  color: #2c3e50;
+  font-size: var(--text-lg);
+  font-family: var(--font-sans);
+  color: var(--text-primary);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 
   a {
-    color: #337ab7;
+    color: var(--color-primary);
     cursor: pointer;
 
     &:hover {
-      color: rgb(32, 160, 255);
+      color: var(--color-primary-hover);
     }
   }
 }
 
-//main-container全局样式
+// main-container 全局样式
 .app-container {
-  padding: 20px;
+  padding: var(--space-4) var(--space-5);
 }
 
 .components-container {
-  margin: 30px 50px;
+  margin: var(--space-8) var(--space-12);
   position: relative;
 }
 
@@ -141,30 +150,27 @@ aside {
   width: 100%;
   text-align: right;
   padding-right: 20px;
-  transition: 600ms ease position;
-  background: linear-gradient(90deg, rgba(32, 182, 249, 1) 0%, rgba(32, 182, 249, 1) 0%, rgba(33, 120, 241, 1) 100%, rgba(33, 120, 241, 1) 100%);
+  background: var(--bg-surface);
+  border-bottom: 1px solid var(--border-light);
 
   .subtitle {
     font-size: 20px;
-    color: #fff;
+    color: var(--text-primary);
   }
 
-  &.draft {
-    background: #d0d0d0;
-  }
-
+  &.draft,
   &.deleted {
-    background: #d0d0d0;
+    background: var(--bg-muted);
   }
 }
 
 .link-type,
 .link-type:focus {
-  color: #337ab7;
+  color: var(--color-primary);
   cursor: pointer;
 
   &:hover {
-    color: rgb(32, 160, 255);
+    color: var(--color-primary-hover);
   }
 }
 
