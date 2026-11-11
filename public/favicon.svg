@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <rect x="2" y="2" width="60" height="60" rx="14" fill="#2563EB"/>
+  <!-- 中心枢纽 -->
+  <circle cx="32" cy="32" r="7" fill="#fff"/>
+  <!-- 云形卫星节点 -->
+  <circle cx="32" cy="14" r="5" fill="#fff" opacity="0.95"/>
+  <circle cx="15" cy="42" r="5" fill="#fff" opacity="0.95"/>
+  <circle cx="49" cy="42" r="5" fill="#fff" opacity="0.95"/>
+  <!-- 枢纽连线 -->
+  <g stroke="#fff" stroke-width="2.5" opacity="0.7" stroke-linecap="round">
+    <line x1="32" y1="25" x2="32" y2="19"/>
+    <line x1="27" y1="36" x2="18" y2="40"/>
+    <line x1="37" y1="36" x2="46" y2="40"/>
+  </g>
+  <!-- 云底弧 -->
+  <path d="M20 50 Q32 58 44 50" fill="none" stroke="#fff" stroke-width="2.5" opacity="0.6" stroke-linecap="round"/>
+</svg>

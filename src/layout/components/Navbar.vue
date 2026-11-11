@@ -12,14 +12,6 @@
       <template v-if="appStore.device !== 'mobile'">
         <header-search id="header-search" class="right-menu-item" />
 
-        <el-tooltip content="源码地址" effect="dark" placement="bottom">
-          <ruo-yi-git id="ruoyi-git" class="right-menu-item hover-effect" />
-        </el-tooltip>
-
-        <el-tooltip content="文档地址" effect="dark" placement="bottom">
-          <ruo-yi-doc id="ruoyi-doc" class="right-menu-item hover-effect" />
-        </el-tooltip>
-
         <screenfull id="screenfull" class="right-menu-item hover-effect" />
 
         <el-tooltip content="主题模式" effect="dark" placement="bottom">
@@ -74,8 +66,6 @@ import Hamburger from '@/components/Hamburger'
 import Screenfull from '@/components/Screenfull'
 import SizeSelect from '@/components/SizeSelect'
 import HeaderSearch from '@/components/HeaderSearch'
-import RuoYiGit from '@/components/RuoYi/Git'
-import RuoYiDoc from '@/components/RuoYi/Doc'
 import useAppStore from '@/store/modules/app'
 import useUserStore from '@/store/modules/user'
 import useLockStore from '@/store/modules/lock'
@@ -138,7 +128,7 @@ async function toggleTheme(event) {
   const wasDark = settingsStore.isDark
 
   const isReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches
-  const isSupported = document.startViewTransition && !isReducedMotion
+  const isSupported = document.startViewTransition && !isReducedMotion && !document.hidden
 
   if (!isSupported) {
     settingsStore.toggleTheme()
@@ -151,6 +141,12 @@ async function toggleTheme(event) {
       settingsStore.toggleTheme()
       await nextTick()
     })
+    // 兜底：个别环境下 transition 回调不执行，确保主题最终被切换
+    const watchdog = setTimeout(() => {
+      if (settingsStore.isDark === wasDark) {
+        settingsStore.toggleTheme()
+      }
+    }, 300)
     await transition.ready
 
     const endRadius = Math.hypot(Math.max(x, window.innerWidth - x), Math.max(y, window.innerHeight - y))
@@ -166,9 +162,12 @@ async function toggleTheme(event) {
       }
     )
     await transition.finished
+    clearTimeout(watchdog)
   } catch (error) {
     console.warn("View transition failed, falling back to immediate toggle:", error)
-    settingsStore.toggleTheme()
+    if (settingsStore.isDark === wasDark) {
+      settingsStore.toggleTheme()
+    }
   }
 }
 </script>
@@ -181,29 +180,36 @@ async function toggleTheme(event) {
 }
 
 .navbar {
-  height: 50px;
+  height: 56px;
   overflow: hidden;
   position: relative;
-  background: var(--navbar-bg);
-  box-shadow: 0 1px 4px rgba(0, 21, 41, 0.08);
+  background: var(--header-bg);
+  border-bottom: 1px solid var(--header-border);
   display: flex;
   align-items: center;
-  // padding: 0 8px;
   box-sizing: border-box;
+  padding: 0 var(--space-2, 8px);
 
   .hamburger-container {
-    line-height: 46px;
-    height: 100%;
+    height: 36px;
+    width: 36px;
+    border-radius: var(--radius-md);
     cursor: pointer;
-    transition: background 0.3s;
+    transition: background-color var(--transition-fast) var(--ease-in-out);
     -webkit-tap-highlight-color: transparent;
     display: flex;
     align-items: center;
+    justify-content: center;
     flex-shrink: 0;
-    margin-right: 8px;
+    margin-right: 4px;
 
     &:hover {
-      background: rgba(0, 0, 0, 0.025);
+      background: var(--bg-hover);
+    }
+
+    &:focus-visible {
+      outline: 2px solid var(--color-primary);
+      outline-offset: -2px;
     }
   }
 
@@ -227,7 +233,6 @@ async function toggleTheme(event) {
 
   .right-menu {
     height: 100%;
-    line-height: 50px;
     display: flex;
     align-items: center;
     margin-left: auto;
@@ -237,19 +242,29 @@ async function toggleTheme(event) {
     }
 
     .right-menu-item {
-      display: inline-block;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
       padding: 0 8px;
-      height: 100%;
-      font-size: 18px;
-      color: #5a5e66;
+      height: 56px;
+      font-size: 17px;
+      color: var(--text-regular);
       vertical-align: text-bottom;
 
       &.hover-effect {
         cursor: pointer;
-        transition: background 0.3s;
+        transition: background-color var(--transition-fast) var(--ease-in-out),
+          color var(--transition-fast) var(--ease-in-out);
 
         &:hover {
-          background: rgba(0, 0, 0, 0.025);
+          background: var(--bg-hover);
+          color: var(--text-primary);
+        }
+
+        &:focus-visible {
+          outline: 2px solid var(--color-primary);
+          outline-offset: -2px;
+          border-radius: var(--radius-md);
         }
       }
 
@@ -258,46 +273,57 @@ async function toggleTheme(event) {
         align-items: center;
 
         svg {
-          transition: transform 0.3s;
-          
+          transition: transform var(--transition-base) var(--ease-in-out);
+
           &:hover {
-            transform: scale(1.15);
+            transform: rotate(15deg);
           }
         }
       }
     }
 
     .avatar-container {
-      margin-right: 0px;
-      padding-right: 0px;
+      margin-right: 4px;
+      padding-right: 0;
+      height: 56px;
 
       .avatar-wrapper {
-        margin-top: 10px;
-        right: 8px;
-        position: relative;
+        display: flex;
+        align-items: center;
+        height: 100%;
+        cursor: pointer;
+        border-radius: var(--radius-md);
+        padding: 0 6px;
+        transition: background-color var(--transition-fast) var(--ease-in-out);
+
+        &:hover {
+          background: var(--bg-hover);
+        }
 
         .user-avatar {
           cursor: pointer;
-          width: 30px;
-          height: 30px;
+          width: 28px;
+          height: 28px;
           margin-right: 8px;
           border-radius: 50%;
+          outline: 2px solid var(--border-light);
         }
 
-        .user-nickname{
-          position: relative;
-          left: 0px;
-          bottom: 10px;
+        .user-nickname {
           font-size: 14px;
-          font-weight: bold;
+          font-weight: var(--weight-medium);
+          color: var(--text-primary);
+          max-width: 120px;
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
         }
 
         i {
           cursor: pointer;
-          position: absolute;
-          right: -20px;
-          top: 25px;
           font-size: 12px;
+          margin-left: 4px;
+          color: var(--text-secondary);
         }
       }
     }

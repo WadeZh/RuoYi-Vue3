@@ -7,7 +7,7 @@ export default {
   /**
    * 侧边栏主题 深色主题theme-dark，浅色主题theme-light
    */
-  sideTheme: 'theme-dark',
+  sideTheme: 'theme-light',
 
   /**
    * 是否系统布局配置
@@ -60,8 +60,14 @@ export default {
   footerVisible: false,
 
   /**
+   * 空闲自动锁屏（分钟，0 表示不启用）
+   */
+  autoLockEnabled: false,
+  autoLockMinutes: 15,
+
+  /**
    * 底部版权文本内容
    */
-  footerContent: 'Copyright © 2018-2026 RuoYi. All Rights Reserved.'
+  footerContent: 'Copyright © 2026 YunShu 云枢. All Rights Reserved.'
 }
 
