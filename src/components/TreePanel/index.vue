@@ -551,8 +551,8 @@ onBeforeUnmount(() => {
 .tree-sidebar {
   flex-shrink: 0;
   width: 220px;
-  background: #fff;
-  border-right: 1px solid #e8eaed;
+  background: var(--bg-surface);
+  border-right: 1px solid var(--border-light);
   display: flex;
   flex-direction: column;
   overflow: hidden;
@@ -589,11 +589,11 @@ onBeforeUnmount(() => {
   transition: background 0.2s;
   
   &:hover {
-    background: rgba(64, 158, 255, 0.3);
+    background: color-mix(in srgb, var(--color-primary) 30%, transparent);
   }
-  
+
   &.active {
-    background: rgba(64, 158, 255, 0.5);
+    background: color-mix(in srgb, var(--color-primary) 50%, transparent);
   }
 }
 
@@ -608,14 +608,14 @@ onBeforeUnmount(() => {
   justify-content: center;
   width: 15px;
   height: 20px;
-  background: #fff;
+  background: var(--bg-surface);
   border-radius: 0 4px 4px 0;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  box-shadow: var(--shadow-sm, 0 1px 3px rgba(0, 0, 0, 0.1));
   transition: all 0.2s ease;
-  
+
   .tree-sidebar.collapsed & {
     right: 0;
-    background: #f7f8fa;
+    background: var(--bg-surface-2);
     border-radius: 0 4px 4px 0;
   }
   
@@ -626,15 +626,15 @@ onBeforeUnmount(() => {
 
 .collapse-button {
   font-size: 20px;
-  color: #909399;
+  color: var(--text-secondary);
   cursor: pointer;
   padding: 4px;
   border-radius: 4px;
   transition: all 0.2s;
-  
+
   &:hover {
-    color: #409eff;
-    background: #ecf5ff;
+    color: var(--color-primary);
+    background: color-mix(in srgb, var(--color-primary) 10%, transparent);
   }
 }
 
@@ -644,14 +644,14 @@ onBeforeUnmount(() => {
   justify-content: space-between;
   padding: 0 10px;
   height: 40px;
-  border-bottom: 1px solid #e8eaed;
-  background: #f7f8fa;
+  border-bottom: 1px solid var(--border-light);
+  background: var(--bg-surface-2);
   flex-shrink: 0;
 
   .tree-title {
-    font-size: 13px;
-    font-weight: 600;
-    color: #303133;
+    font-size: var(--text-sm);
+    font-weight: var(--weight-semibold, 600);
+    color: var(--text-primary);
     white-space: nowrap;
     overflow: hidden;
     display: flex;
@@ -659,7 +659,7 @@ onBeforeUnmount(() => {
     gap: 5px;
 
     .el-icon {
-      color: #409eff;
+      color: var(--color-primary);
       font-size: 16px;
     }
   }
@@ -674,15 +674,15 @@ onBeforeUnmount(() => {
 
 .tree-action-icon {
   font-size: 20px;
-  color: #909399;
+  color: var(--text-secondary);
   cursor: pointer;
   padding: 4px;
   border-radius: 4px;
   transition: all 0.2s;
 
   &:hover {
-    color: #409eff;
-    background: #ecf5ff;
+    color: var(--color-primary);
+    background: color-mix(in srgb, var(--color-primary) 10%, transparent);
   }
 }
 
@@ -705,31 +705,31 @@ onBeforeUnmount(() => {
   }
 
   &::-webkit-scrollbar-thumb {
-    background: #dcdfe6;
+    background: var(--border-base);
     border-radius: 4px;
-    
+
     &:hover {
-      background: #c0c4cc;
+      background: var(--text-disabled);
     }
   }
 
   :deep(.el-tree-node__content) {
     height: 32px;
-    border-radius: 4px;
+    border-radius: var(--radius-sm, 4px);
     margin-bottom: 1px;
 
     &:hover {
-      background: #f0f7ff;
+      background: var(--bg-hover);
     }
   }
 
   :deep(.el-tree-node.is-current > .el-tree-node__content) {
-    background: #e6f0fd;
-    color: #409eff;
-    font-weight: 600;
+    background: color-mix(in srgb, var(--color-primary) 12%, transparent);
+    color: var(--color-primary);
+    font-weight: var(--weight-semibold, 600);
 
     .node-icon {
-      color: #409eff !important;
+      color: var(--color-primary) !important;
     }
   }
 }
@@ -738,12 +738,12 @@ onBeforeUnmount(() => {
   display: flex;
   align-items: center;
   gap: 5px;
-  font-size: 13px;
+  font-size: var(--text-sm);
   overflow: hidden;
 
   .node-icon {
     font-size: 14px;
-    color: #f5a623;
+    color: var(--color-warning);
     flex-shrink: 0;
   }
 

@@ -172,11 +172,11 @@ onBeforeUnmount(() => {
 </script>
 
 <style scoped>
-/* 样式与原文件完全一致，无需改动 */
+/* 锁屏页为深色沉浸式设计：底色用 neutral 令牌（亮暗模式下均为深色底 + 白字） */
 .lock-container {
   position: fixed;
   inset: 0;
-  background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
+  background: linear-gradient(135deg, var(--neutral-950), var(--neutral-900) 55%, var(--neutral-800));
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -284,7 +284,7 @@ onBeforeUnmount(() => {
 }
 
 .input-wrap:focus-within {
-  border-color: rgba(255,255,255,0.6);
+  border-color: var(--color-primary);
   background: rgba(255,255,255,0.13);
 }
 
@@ -318,7 +318,7 @@ onBeforeUnmount(() => {
   width: 42px;
   height: 42px;
   border-radius: 50%;
-  background: linear-gradient(135deg, #667eea, #764ba2);
+  background: linear-gradient(135deg, var(--color-primary), var(--color-primary-hover));
   border: none;
   color: #fff;
   font-size: 18px;
@@ -346,7 +346,8 @@ onBeforeUnmount(() => {
 
 .error-msg {
   margin-top: 14px;
-  color: #ff7675;
+  color: var(--color-danger);
+  filter: brightness(1.4);
   font-size: 13px;
   text-align: center;
   animation: fadeIn 0.3s ease;
