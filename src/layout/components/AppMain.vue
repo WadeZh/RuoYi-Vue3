@@ -37,8 +37,8 @@ function addIframe() {
 
 <style lang="scss" scoped>
 .app-main {
-  /* 50= navbar  50  */
-  min-height: calc(100vh - 50px);
+  /* 56 = navbar */
+  min-height: calc(100vh - 56px);
   width: 100%;
   position: relative;
   overflow: hidden;
@@ -47,7 +47,7 @@ function addIframe() {
 .fixed-header + .app-main {
   overflow-y: auto;
   scrollbar-gutter: auto;
-  height: calc(100vh - 50px);
+  height: calc(100vh - 56px);
   min-height: 0px;
 }
 
@@ -56,18 +56,18 @@ function addIframe() {
 }
 
 .fixed-header + .app-main {
-  margin-top: 50px;
+  margin-top: 56px;
 }
 
 .hasTagsView {
   .app-main {
-    /* 84 = navbar + tags-view = 50 + 34 */
-    min-height: calc(100vh - 84px);
+    /* 96 = navbar + tags-view = 56 + 40 */
+    min-height: calc(100vh - 96px);
   }
 
   .fixed-header + .app-main {
-    margin-top: 84px;
-    height: calc(100vh - 84px);
+    margin-top: 96px;
+    height: calc(100vh - 96px);
     min-height: 0px;
   }
 }
@@ -92,15 +92,15 @@ function addIframe() {
     .fixed-header + .app-main {
       padding-bottom: max(17px, calc(constant(safe-area-inset-bottom) + 10px));
       padding-bottom: max(17px, calc(env(safe-area-inset-bottom) + 10px));
-      height: calc(100svh - 50px);
-      height: calc(100dvh - 50px);
+      height: calc(100svh - 56px);
+      height: calc(100dvh - 56px);
     }
 
     .hasTagsView .fixed-header + .app-main {
       padding-bottom: max(17px, calc(constant(safe-area-inset-bottom) + 10px));
       padding-bottom: max(17px, calc(env(safe-area-inset-bottom) + 10px));
-      height: calc(100svh - 84px);
-      height: calc(100dvh - 84px);
+      height: calc(100svh - 96px);
+      height: calc(100dvh - 96px);
     }
   }
 }

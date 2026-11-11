@@ -19,6 +19,7 @@ import Sidebar from './components/Sidebar/index.vue'
 import { AppMain, Navbar, Settings, TagsView } from './components'
 import useAppStore from '@/store/modules/app'
 import useSettingsStore from '@/store/modules/settings'
+import { useIdleLock } from '@/composables/useIdleLock'
 
 const settingsStore = useSettingsStore()
 const theme = computed(() => settingsStore.theme)
@@ -26,6 +27,9 @@ const sidebar = computed(() => useAppStore().sidebar)
 const device = computed(() => useAppStore().device)
 const needTagsView = computed(() => settingsStore.tagsView)
 const fixedHeader = computed(() => settingsStore.fixedHeader)
+
+// 空闲自动锁屏（全局监听，开关与时长在布局设置中配置）
+useIdleLock()
 
 const classObj = computed(() => ({
   hideSidebar: !sidebar.value.opened,
@@ -103,7 +107,7 @@ function setLayout() {
 }
 
 .hideSidebar .fixed-header {
-  width: calc(100% - 54px);
+  width: calc(100% - 64px);
 }
 
 .sidebarHide .fixed-header {

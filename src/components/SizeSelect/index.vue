@@ -36,8 +36,11 @@ function handleSetSize(size) {
 
 <style lang='scss' scoped>
 .size-icon--style {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  padding: 0 8px;
   font-size: 18px;
-  line-height: 50px;
-  padding-right: 7px;
 }
 </style>

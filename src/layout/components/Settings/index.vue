@@ -115,6 +115,22 @@
       </span>
     </div>
 
+    <div class="drawer-item">
+      <span>自动锁屏</span>
+      <span class="comp-style">
+        <el-switch v-model="settingsStore.autoLockEnabled" class="drawer-switch" />
+      </span>
+    </div>
+
+    <div class="drawer-item" v-if="settingsStore.autoLockEnabled">
+      <span>空闲时长</span>
+      <span class="comp-style">
+        <el-select v-model="settingsStore.autoLockMinutes" size="small" style="width: 90px">
+          <el-option v-for="m in [1, 5, 15, 30, 60]" :key="m" :label="m + ' 分钟'" :value="m" />
+        </el-select>
+      </span>
+    </div>
+
     <el-divider />
 
     <el-button type="primary" plain icon="DocumentAdd" @click="saveSetting">保存配置</el-button>
@@ -139,7 +155,8 @@ const theme = ref(settingsStore.theme)
 const sideTheme = ref(settingsStore.sideTheme)
 const tagsViewPersist = ref(settingsStore.tagsViewPersist)
 const storeSettings = computed(() => settingsStore)
-const predefineColors = ref(["#409EFF", "#ff4500", "#ff8c00", "#ffd700", "#90ee90", "#00ced1", "#1e90ff", "#c71585"])
+// 预置色板与新设计体系一致（首位为默认主色）
+const predefineColors = ref(["#2563EB", "#0891B2", "#059669", "#7C3AED", "#DB2777", "#D97706", "#DC2626", "#0F766E"])
 
 /** 是否需要dynamicTitle */
 function dynamicTitleChange() {
@@ -200,6 +217,8 @@ function saveSetting() {
     "sidebarLogo": storeSettings.value.sidebarLogo,
     "dynamicTitle": storeSettings.value.dynamicTitle,
     "footerVisible": storeSettings.value.footerVisible,
+    "autoLockEnabled": storeSettings.value.autoLockEnabled,
+    "autoLockMinutes": storeSettings.value.autoLockMinutes,
     "sideTheme": storeSettings.value.sideTheme,
     "theme": storeSettings.value.theme
   }
@@ -245,8 +264,9 @@ defineExpose({
   .setting-drawer-block-checbox-item {
     position: relative;
     margin-right: 16px;
-    border-radius: 2px;
+    border-radius: var(--radius-sm, 6px);
     cursor: pointer;
+    overflow: hidden;
 
     img {
       width: 48px;
@@ -297,9 +317,10 @@ defineExpose({
     cursor: pointer;
     width: 56px;
     height: 48px;
-    border-radius: 4px;
-    background: #f0f2f5;
+    border-radius: var(--radius-md, 8px);
+    background: var(--bg-muted, #f0f2f5);
     border: 2px solid transparent;
+    overflow: hidden;
   }
 
   .left {
@@ -310,7 +331,7 @@ defineExpose({
     }
     b:last-child {
       width: 30%;
-      background: #1b2a47;
+      background: var(--neutral-800, #1e293b);
       position: absolute;
       height: 100%;
       top: 0;
@@ -322,11 +343,11 @@ defineExpose({
       border-radius: 4px 4px 0 0;
       display: block;
       height: 30%;
-      background: #1b2a47;
+      background: var(--neutral-800, #1e293b);
     }
     b:last-child {
       width: 30%;
-      background: #1b2a47;
+      background: var(--neutral-800, #1e293b);
       position: absolute;
       height: 70%;
       border-radius: 0 0 0 4px;
@@ -336,7 +357,7 @@ defineExpose({
     b:first-child {
       display: block;
       height: 30%;
-      background: #1b2a47;
+      background: var(--neutral-800, #1e293b);
       border-radius: 4px 4px 0 0;
     }
   }

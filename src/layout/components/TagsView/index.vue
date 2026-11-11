@@ -15,12 +15,13 @@
         :to="{ path: tag.path, query: tag.query, fullPath: tag.fullPath }"
         class="tags-view-item"
         :style="tagActiveStyle(tag)"
-        @click.middle="!isAffix(tag) ? closeSelectedTag(tag) : ''"
+        @click.middle="!isAffix(tag) && !isPinned(tag) ? closeSelectedTag(tag) : ''"
         @contextmenu.prevent="openMenu(tag, $event)"
       >
         <svg-icon v-if="tagsIcon && tag.meta && tag.meta.icon && tag.meta.icon !== '#'" :icon-class="tag.meta.icon" style="margin-right: 3px;" />
         {{ tag.title }}
-        <span v-if="!isAffix(tag)" @click.prevent.stop="closeSelectedTag(tag)" class="tags-close-btn">
+        <el-icon v-if="isPinned(tag)" class="tag-pin" title="已固定"><flag /></el-icon>
+        <span v-if="!isAffix(tag) && !isPinned(tag)" @click.prevent.stop="closeSelectedTag(tag)" class="tags-close-btn">
           <close class="el-icon-close" />
         </span>
       </router-link>
@@ -38,11 +39,12 @@
       </span>
       <template #dropdown>
         <el-dropdown-menu class="tags-dropdown-menu">
-          <el-dropdown-item v-if="!isAffix(selectedDropdownTag)" command="close"><close style="width: 1em; height: 1em;" />关闭当前</el-dropdown-item>
+          <el-dropdown-item v-if="!isAffix(selectedDropdownTag) && !isPinned(selectedDropdownTag)" command="close"><close style="width: 1em; height: 1em;" />关闭当前</el-dropdown-item>
           <el-dropdown-item command="closeOthers"><circle-close style="width: 1em; height: 1em;" />关闭其他</el-dropdown-item>
           <el-dropdown-item command="closeLeft" :disabled="isFirstView()"><back style="width: 1em; height: 1em;" />关闭左侧</el-dropdown-item>
           <el-dropdown-item command="closeRight" :disabled="isLastView()"><right style="width: 1em; height: 1em;" />关闭右侧</el-dropdown-item>
           <el-dropdown-item command="closeAll"><circle-close style="width: 1em; height: 1em;" />全部关闭</el-dropdown-item>
+          <el-dropdown-item v-if="hasClosedHistory" command="reopen"><refresh-left style="width: 1em; height: 1em;" />重新打开关闭的页签</el-dropdown-item>
           <el-dropdown-item command="fullscreen" divided>
             <template v-if="!isFullscreen"><full-screen style="width: 1em; height: 1em;" />全屏显示</template>
             <template v-else><close style="width: 1em; height: 1em;" />退出全屏</template>
@@ -59,7 +61,11 @@
     <!-- 右键上下文菜单 -->
     <ul v-show="visible" :style="{ left: left + 'px', top: top + 'px' }" class="contextmenu">
       <li @click="refreshSelectedTag(selectedTag)"><refresh-right style="width: 1em; height: 1em;" />刷新页面</li>
-      <li v-if="!isAffix(selectedTag)" @click="closeSelectedTag(selectedTag)"><close style="width: 1em; height: 1em;" />关闭当前</li>
+      <li @click="togglePinTag(selectedTag)">
+        <flag style="width: 1em; height: 1em;" />{{ isPinned(selectedTag) ? '取消固定' : '固定页签' }}
+      </li>
+      <li v-if="!isAffix(selectedTag) && !isPinned(selectedTag)" @click="closeSelectedTag(selectedTag)"><close style="width: 1em; height: 1em;" />关闭当前</li>
+      <li v-if="hasClosedHistory" @click="reopenClosedTag"><refresh-left style="width: 1em; height: 1em;" />重新打开关闭的页签</li>
       <li @click="closeOthersTags"><circle-close style="width: 1em; height: 1em;" />关闭其他</li>
       <li v-if="!isFirstView()" @click="closeLeftTags"><back style="width: 1em; height: 1em;" />关闭左侧</li>
       <li v-if="!isLastView()" @click="closeRightTags"><right style="width: 1em; height: 1em;" />关闭右侧</li>
@@ -69,6 +75,7 @@
 </template>
 
 <script setup>
+import Sortable from 'sortablejs'
 import ScrollPane from './ScrollPane'
 import { getNormalPath } from '@/utils/ruoyi'
 import useTagsViewStore from '@/store/modules/tagsView'
@@ -121,14 +128,34 @@ watch(visitedViews, () => {
 onMounted(() => {
   initTags()
   addTags()
+  initSortable()
   window.addEventListener('resize', updateArrowState)
   window.addEventListener('keydown', handleKeyDown)
 })
 
 onBeforeUnmount(() => {
+  if (sortableInstance) {
+    sortableInstance.destroy()
+    sortableInstance = null
+  }
   window.removeEventListener('resize', updateArrowState)
   window.removeEventListener('keydown', handleKeyDown)
 })
+
+/* ---------- 页签拖拽排序（affix 页签置首由 store 保证） ---------- */
+let sortableInstance = null
+
+function initSortable() {
+  const wrapper = scrollPaneRef.value?.$el?.querySelector('.el-scrollbar__view')
+  if (!wrapper) return
+  sortableInstance = Sortable.create(wrapper, {
+    animation: 150,
+    draggable: '.tags-view-item',
+    onEnd: (evt) => {
+      useTagsViewStore().reorderViews({ oldIndex: evt.oldIndex, newIndex: evt.newIndex })
+    }
+  })
+}
 
 function handleKeyDown(event) {
   // 当按下Esc键且处于全屏状态时，退出全屏
@@ -143,14 +170,38 @@ function isActive(r) {
 
 function tagActiveStyle(tag) {
   if (!isActive(tag) || tagsViewStyle.value !== 'card') return {}
+  // 激活页签使用主题色淡染底 + 主题色文字（--current-color 由 Layout 注入）
   return {
-    'background-color': theme.value,
-    'border-color': theme.value
+    'background-color': 'var(--current-color-light, rgba(37, 99, 235, 0.1))',
+    'border-color': 'transparent',
+    'color': theme.value
   }
 }
 
 function isAffix(tag) {
   return tag && tag.meta && tag.meta.affix
+}
+
+// 固定页签（用户手动固定，豁免关闭类操作）
+function isPinned(tag) {
+  return useTagsViewStore().isPinned(tag)
+}
+
+function togglePinTag(tag) {
+  if (!tag || !tag.path) return
+  useTagsViewStore().togglePin(tag)
+  closeMenu()
+}
+
+// 重新打开已关闭页签
+const hasClosedHistory = computed(() => useTagsViewStore().closedHistory.length > 0)
+
+function reopenClosedTag() {
+  const entry = useTagsViewStore().popClosedHistory()
+  if (!entry) return
+  useTagsViewStore().addView(entry)
+  router.push(entry.fullPath || entry.path)
+  closeMenu()
 }
 
 function isFirstView() {
@@ -289,6 +340,7 @@ function handleDropdownCommand(command) {
     case 'closeLeft':   closeLeftTags(); break
     case 'closeRight':  closeRightTags(); break
     case 'closeAll':    closeAllTags(tag); break
+    case 'reopen':      reopenClosedTag(); break
   }
 }
 
@@ -370,23 +422,18 @@ function handleScroll() {
 </script>
 
 <style lang="scss" scoped>
-$tags-bar-height: 34px;
+$tags-bar-height: 40px;
 
 .tags-view-container {
   height: $tags-bar-height;
   width: 100%;
-  background: var(--tags-bg, #fff);
-  border-bottom: 1px solid var(--tags-item-border, #d8dce5);
+  background: var(--tags-bg, var(--header-bg, #fff));
+  border-bottom: 1px solid var(--header-border, var(--tags-item-border, #d8dce5));
   display: flex;
   align-items: center;
   overflow: hidden;
 
-  $btn-width: 28px;
-  $btn-color: #71717a;
-  $btn-hover-bg: #f0f2f5;
-  $btn-hover-color: #303133;
-  $btn-disabled-color: #c0c4cc;
-  $divider: 1px solid var(--tags-item-border, #d8dce5);
+  $btn-width: 32px;
 
   .tags-nav-btn {
     flex-shrink: 0;
@@ -396,23 +443,31 @@ $tags-bar-height: 34px;
     width: $btn-width;
     height: $tags-bar-height;
     cursor: pointer;
-    color: $btn-color;
+    color: var(--text-secondary, #71717a);
     font-size: 13px;
     user-select: none;
-    transition: background 0.15s, color 0.15s;
+    transition: background-color var(--transition-fast, 0.15s) var(--ease-in-out, ease),
+      color var(--transition-fast, 0.15s) var(--ease-in-out, ease);
 
     &:hover:not(.disabled) {
-      background: $btn-hover-bg;
-      color: $btn-hover-color;
+      background: var(--bg-hover, #f0f2f5);
+      color: var(--text-primary, #303133);
+    }
+
+    &:focus-visible {
+      outline: 2px solid var(--color-primary, #2563eb);
+      outline-offset: -2px;
     }
 
     &.disabled {
-      color: $btn-disabled-color;
+      color: var(--text-disabled, #c0c4cc);
       cursor: not-allowed;
     }
 
-    &--left  { border-right: $divider; }
-    &--right { border-left: $divider; }
+    &--left,
+    &--right {
+      border-color: transparent;
+    }
   }
 
   .tags-view-wrapper {
@@ -426,37 +481,56 @@ $tags-bar-height: 34px;
       position: relative;
       cursor: pointer;
       height: 26px;
-      line-height: 26px;
-      border: 1px solid var(--tags-item-border, #d8dce5);
-      color: var(--tags-item-text, #495060);
-      background: var(--tags-item-bg, #fff);
-      padding: 0 8px;
+      line-height: 1;
+      border: 1px solid transparent;
+      color: var(--tags-item-text, var(--text-secondary, #495060));
+      background: transparent;
+      padding: 0 10px;
       font-size: 12px;
-      margin-left: 5px;
-      border-radius: 3px;
+      margin-left: 6px;
+      border-radius: var(--radius-full, 999px);
       text-decoration: none;
       vertical-align: middle;
-      padding-top: 2px !important;
+      transition: background-color var(--transition-fast, 0.15s) var(--ease-in-out, ease),
+        color var(--transition-fast, 0.15s) var(--ease-in-out, ease),
+        border-color var(--transition-fast, 0.15s) var(--ease-in-out, ease);
 
-      &:first-of-type { margin-left: 6px; }
+      &:hover:not(.active) {
+        background: var(--tags-item-hover, var(--bg-hover, #f0f2f5));
+        color: var(--text-primary, #303133);
+      }
+
+      &:focus-visible {
+        outline: 2px solid var(--color-primary, #2563eb);
+        outline-offset: -2px;
+      }
+
+      &:first-of-type { margin-left: 8px; }
       &:last-of-type  { margin-right: 15px; }
+
+      .tag-pin {
+        margin-left: 4px;
+        font-size: 12px;
+        color: var(--current-color, #2563eb);
+        opacity: 0.85;
+      }
     }
   }
 
+  /* card 模式激活态：主题色淡染胶囊（内联样式来自 tagActiveStyle） */
   &:not(.tags-view-container--chrome) .tags-view-wrapper .tags-view-item.active {
-    background-color: #42b983;
-    color: #fff;
-    border-color: #42b983;
+    font-weight: var(--weight-medium, 500);
+    color: var(--current-color, #2563eb);
 
     &::before {
       content: '';
-      background: #fff;
+      background: var(--current-color, #2563eb);
       display: inline-block;
-      width: 8px;
-      height: 8px;
+      width: 6px;
+      height: 6px;
       border-radius: 50%;
       position: relative;
-      margin-right: 5px;
+      margin-right: 6px;
     }
   }
 
@@ -477,15 +551,21 @@ $tags-bar-height: 34px;
     width: $btn-width;
     height: $tags-bar-height;
     cursor: pointer;
-    color: $btn-color;
+    color: var(--text-secondary, #71717a);
     font-size: 13px;
-    border-left: $divider;
+    border-color: transparent;
     user-select: none;
-    transition: background 0.15s, color 0.15s;
+    transition: background-color var(--transition-fast, 0.15s) var(--ease-in-out, ease),
+      color var(--transition-fast, 0.15s) var(--ease-in-out, ease);
 
     &:hover {
-      background: $btn-hover-bg;
-      color: $btn-hover-color;
+      background: var(--bg-hover, #f0f2f5);
+      color: var(--text-primary, #303133);
+    }
+
+    &:focus-visible {
+      outline: 2px solid var(--color-primary, #2563eb);
+      outline-offset: -2px;
     }
   }
 
@@ -499,29 +579,32 @@ $tags-bar-height: 34px;
     z-index: 3000;
     position: fixed;
     list-style-type: none;
-    padding: 5px 0;
-    border-radius: 4px;
+    padding: 5px;
+    border-radius: var(--radius-lg, 12px);
     font-size: 12px;
     font-weight: 400;
-    color: var(--tags-item-text, #333);
-    box-shadow: 2px 2px 3px 0 rgba(0, 0, 0, .3);
-    border: 1px solid var(--el-border-color-light, #e4e7ed);
+    color: var(--tags-item-text, var(--text-regular, #333));
+    box-shadow: var(--shadow-lg, 0 12px 32px rgba(15, 23, 42, 0.12));
+    border: 1px solid var(--border-light, #e4e7ed);
+    min-width: 132px;
 
     li {
       margin: 0;
-      padding: 7px 16px;
+      padding: 7px 12px;
       cursor: pointer;
+      border-radius: var(--radius-sm, 6px);
+      transition: background-color var(--transition-fast, 0.15s) var(--ease-in-out, ease);
 
       &:hover {
-        background: var(--tags-item-hover, #eee);
+        background: var(--bg-hover, #eee);
       }
     }
   }
 
   &.tags-view-container--chrome {
-    --chrome-strip-bg: #ffffff;
-    --chrome-strip-border: var(--el-border-color-lighter, #e4e7ed);
-    --chrome-tab-active-bg: var(--el-color-primary-light-9);
+    --chrome-strip-bg: var(--header-bg, #ffffff);
+    --chrome-strip-border: var(--header-border, var(--el-border-color-lighter, #e4e7ed));
+    --chrome-tab-active-bg: var(--bg-surface, #ffffff);
     --chrome-tab-text: var(--el-text-color-regular, #606266);
     --chrome-tab-text-active: var(--el-color-primary);
     --chrome-wing-r: 10px;
@@ -549,8 +632,8 @@ $tags-bar-height: 34px;
         justify-content: center;
         position: relative;
         z-index: 1;
-        height: 30px;
-        min-height: 30px;
+        height: 32px;
+        min-height: 32px;
         margin: 0 0 -1px;
         padding: 0 12px;
         font-size: 13px;
@@ -562,7 +645,9 @@ $tags-bar-height: 34px;
         color: var(--chrome-tab-text);
         padding-top: 0 !important;
         box-shadow: none !important;
-        transition: background 0.12s ease, color 0.12s ease, border-radius 0.12s ease;
+        transition: background var(--transition-fast, 0.15s) ease,
+          color var(--transition-fast, 0.15s) ease,
+          border-radius var(--transition-fast, 0.15s) ease;
 
         &::before,
         &::after {
@@ -576,7 +661,7 @@ $tags-bar-height: 34px;
           pointer-events: none;
           background: transparent !important;
           border-radius: 0 !important;
-          transition: box-shadow 0.12s ease;
+          transition: box-shadow var(--transition-fast, 0.15s) ease;
         }
 
         &::before {
@@ -606,20 +691,21 @@ $tags-bar-height: 34px;
 
         &:hover:not(.active) {
           background: var(--el-fill-color-light, #f5f7fa) !important;
-          border-radius: 6px 6px 0 0;
+          border-radius: 8px 8px 0 0;
           color: var(--el-text-color-primary, #303133);
         }
 
         &.active {
-          height: 31px;
-          min-height: 31px;
+          height: 33px;
+          min-height: 33px;
           padding: 0 14px;
           color: var(--chrome-tab-text-active) !important;
           font-weight: 500;
           background: var(--chrome-tab-active-bg) !important;
           border: none !important;
-          border-radius: var(--chrome-wing-r) var(--chrome-wing-r) 0 0;
-          box-shadow: 0 1px 4px rgba(0, 0, 0, 0.06);
+          border-top: 2px solid var(--el-color-primary) !important;
+          border-radius: var(--radius-md, 8px) var(--radius-md, 8px) 0 0;
+          box-shadow: none;
 
           &::before {
             box-shadow: calc(var(--chrome-wing-r) * 0.5) calc(var(--chrome-wing-r) * 0.5) 0 calc(var(--chrome-wing-r) * 0.5) var(--chrome-tab-active-bg);
@@ -646,7 +732,7 @@ $tags-bar-height: 34px;
       height: 16px;
       margin-left: 4px;
       border-radius: 50%;
-      transition: all 0.3s cubic-bezier(0.645, 0.045, 0.355, 1);
+      transition: background-color 0.2s cubic-bezier(0.4, 0, 0.2, 1), color 0.2s cubic-bezier(0.4, 0, 0.2, 1);
       cursor: pointer;
       
       .el-icon-close {
@@ -699,14 +785,14 @@ $tags-bar-height: 34px;
 
 .main-container.fullscreen-mode .app-main {
   position: fixed;
-  top: 34px;
+  top: 40px;
   left: 0;
   right: 0;
   bottom: 0;
   margin: 0 !important;
   padding: 0 !important;
-  height: calc(100vh - 34px) !important;
-  min-height: calc(100vh - 34px) !important;
+  height: calc(100vh - 40px) !important;
+  min-height: calc(100vh - 40px) !important;
   overflow: auto;
 }
 </style>

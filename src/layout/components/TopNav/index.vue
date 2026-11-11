@@ -172,15 +172,15 @@ onMounted(() => {
 
 <style lang="scss">
 .topmenu-container.el-menu--horizontal {
-  height: 50px !important;
+  height: 56px !important;
   border-bottom: none;
 }
 
 .topmenu-container.el-menu--horizontal > .el-menu-item {
   float: left;
-  height: 50px !important;
-  line-height: 50px !important;
-  color: #303133 !important;
+  height: 56px !important;
+  line-height: 56px !important;
+  color: var(--text-primary, #303133) !important;
   padding: 0 5px !important;
   margin: 0 10px !important;
 }
@@ -193,16 +193,16 @@ onMounted(() => {
 /* sub-menu item */
 .topmenu-container.el-menu--horizontal > .el-sub-menu .el-sub-menu__title {
   float: left;
-  height: 50px !important;
-  line-height: 50px !important;
-  color: #303133 !important;
+  height: 56px !important;
+  line-height: 56px !important;
+  color: var(--text-primary, #303133) !important;
   padding: 0 5px !important;
   margin: 0 10px !important;
 }
 
 /* 背景色隐藏 */
 .topmenu-container.el-menu--horizontal>.el-menu-item:not(.is-disabled):focus, .topmenu-container.el-menu--horizontal>.el-menu-item:not(.is-disabled):hover, .topmenu-container.el-menu--horizontal>.el-submenu .el-submenu__title:hover {
-  background-color: #ffffff;
+  background-color: transparent;
 }
 
 /* 图标右间距 */

@@ -14,7 +14,7 @@
 </template>
 
 <script setup>
-import logo from '@/assets/logo/logo.png'
+import logo from '@/assets/logo/yunshu.svg'
 import useSettingsStore from '@/store/modules/settings'
 import variables from '@/assets/styles/variables.module.scss'
 
@@ -54,7 +54,7 @@ const getLogoTextColor = computed(() => {
 
 <style lang="scss" scoped>
 .sidebarLogoFade-enter-active {
-  transition: opacity 1.5s;
+  transition: opacity 0.3s var(--ease-out, ease);
 }
 
 .sidebarLogoFade-enter,
@@ -64,21 +64,26 @@ const getLogoTextColor = computed(() => {
 
 .sidebar-logo-container {
   position: relative;
-  height: 50px;
-  line-height: 50px;
+  height: 56px;
+  display: flex;
+  align-items: center;
+  padding: 0 16px;
   background: v-bind(getLogoBackground);
-  text-align: center;
+  border-bottom: 1px solid var(--sidebar-border, transparent);
   overflow: hidden;
 
   & .sidebar-logo-link {
+    display: flex;
+    align-items: center;
     height: 100%;
     width: 100%;
+    min-width: 0;
 
     & .sidebar-logo {
-      width: 32px;
-      height: 32px;
-      vertical-align: middle;
-      margin-right: 12px;
+      width: 28px;
+      height: 28px;
+      flex-shrink: 0;
+      margin-right: 10px;
     }
 
     & .sidebar-title {
@@ -86,14 +91,22 @@ const getLogoTextColor = computed(() => {
       margin: 0;
       color: v-bind(getLogoTextColor);
       font-weight: 600;
-      line-height: 50px;
-      font-size: 14px;
-      font-family: Avenir, Helvetica Neue, Arial, Helvetica, sans-serif;
-      vertical-align: middle;
+      font-size: 15px;
+      font-family: var(--font-sans, inherit);
+      letter-spacing: 0.01em;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
   }
 
   &.collapse {
+    padding: 0;
+
+    .sidebar-logo-link {
+      justify-content: center;
+    }
+
     .sidebar-logo {
       margin-right: 0px;
     }
