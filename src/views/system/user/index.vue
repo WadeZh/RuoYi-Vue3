@@ -75,7 +75,7 @@
               <span>{{ parseTime(scope.row.createTime) }}</span>
             </template>
           </el-table-column>
-          <el-table-column label="操作" align="center" width="150" class-name="small-padding fixed-width">
+          <el-table-column label="操作" align="center" width="200" class-name="small-padding fixed-width">
             <template #default="scope">
               <el-tooltip content="修改" placement="top" v-if="scope.row.userId !== 1">
                 <el-button link type="primary" icon="Edit" @click="handleUpdate(scope.row)" v-hasPermi="['system:user:edit']"></el-button>
@@ -88,6 +88,9 @@
               </el-tooltip>
               <el-tooltip content="分配角色" placement="top" v-if="scope.row.userId !== 1">
                 <el-button link type="primary" icon="CircleCheck" @click="handleAuthRole(scope.row)" v-hasPermi="['system:user:edit']"></el-button>
+              </el-tooltip>
+              <el-tooltip content="权限诊断" placement="top">
+                <el-button link type="primary" icon="Search" @click="handlePermissionDiagnosis(scope.row)" v-hasPermi="['system:permission:diagnose']"></el-button>
               </el-tooltip>
             </template>
           </el-table-column>
@@ -374,6 +377,11 @@ function handleCommand(command, row) {
 function handleAuthRole(row) {
   const userId = row.userId
   router.push("/system/user-auth/role/" + userId)
+}
+
+/** 权限诊断入口（跳转诊断页并自动选中该用户） */
+function handlePermissionDiagnosis(row) {
+  router.push({ path: "/system/permission-diagnosis", query: { userId: row.userId } })
 }
 
 /** 重置密码按钮操作 */
