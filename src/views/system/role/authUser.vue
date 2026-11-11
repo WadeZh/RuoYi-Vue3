@@ -120,6 +120,8 @@ function getList() {
   allocatedUserList(queryParams).then(response => {
     userList.value = response.rows
     total.value = response.total
+  }).finally(() => {
+    // 请求失败也必须关闭 loading，避免页面永久转圈
     loading.value = false
   })
 }

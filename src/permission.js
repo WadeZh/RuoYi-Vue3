@@ -73,4 +73,23 @@ router.beforeEach(async (to, from) => {
 
 router.afterEach(() => {
   NProgress.done()
+  closeLingeringTooltips()
 })
+
+/**
+ * 关闭因路由切换而残留的 tooltip 气泡：
+ * 页面被 keep-alive 缓存时，hover 中的行内按钮/侧栏菜单（如「重置密码」）在跳转后
+ * 不会触发 mouseleave，其 tooltip 会一直挂在 body 上，出现"上个界面的东西"。
+ * 两段处理：① 对仍有关联的 trigger 派发 mouseleave 让 EP 正常收尾；
+ * ② 对关联已断的孤儿 popper（如菜单 tooltip）直接强制隐藏。
+ */
+function closeLingeringTooltips() {
+  document.querySelectorAll('[aria-describedby]').forEach(el => {
+    el.dispatchEvent(new MouseEvent('mouseleave', { bubbles: false }))
+    el.blur?.()
+  })
+  document.querySelectorAll('.el-popper.el-tooltip[aria-hidden="false"]').forEach(popper => {
+    popper.setAttribute('aria-hidden', 'true')
+    popper.style.display = 'none'
+  })
+}
