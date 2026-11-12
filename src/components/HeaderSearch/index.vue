@@ -105,7 +105,7 @@
 <script setup>
 import Fuse from 'fuse.js'
 import cache from '@/plugins/cache'
-import { getNormalPath } from '@/utils/ruoyi'
+import { getNormalPath } from '@/utils/yunshu'
 import { isHttp } from '@/utils/validate'
 import useSettingsStore from '@/store/modules/settings'
 import usePermissionStore from '@/store/modules/permission'
