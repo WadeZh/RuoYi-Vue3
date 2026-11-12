@@ -160,7 +160,8 @@ function getCode() {
   getCodeImg().then(res => {
     captchaEnabled.value = res.captchaEnabled === undefined ? true : res.captchaEnabled
     if (captchaEnabled.value) {
-      codeUrl.value = "data:image/gif;base64," + res.img
+      // 兼容两种返回：真实后端为 base64 图片流，Mock 为完整 dataURL（SVG）
+      codeUrl.value = res.img.startsWith("data:") ? res.img : "data:image/gif;base64," + res.img
       registerForm.value.uuid = res.uuid
     }
   })
