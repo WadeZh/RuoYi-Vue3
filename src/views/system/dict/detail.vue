@@ -116,12 +116,12 @@ function loadData() {
 .drawer-head-name {
   font-size: 16px;
   font-weight: 600;
-  color: var(--dict-drawer-title-color, #2c3e50);
+  color: var(--dict-drawer-title-color);
   margin-right: 8px;
 }
 .drawer-head-type {
   font-size: 14px;
-  color: var(--dict-drawer-subtext-color, #95a5a6);
+  color: var(--dict-drawer-subtext-color);
   font-family: monospace;
 }
 .drawer-wrap {
@@ -132,13 +132,13 @@ function loadData() {
   align-items: center;
   justify-content: center;
   height: 120px;
-  color: var(--dict-drawer-subtext-color, #aaa);
+  color: var(--dict-drawer-subtext-color);
   font-size: 13px;
   gap: 8px;
 }
 .drawer-empty {
   text-align: center;
-  color: var(--dict-drawer-subtext-color, #bbb);
+  color: var(--dict-drawer-subtext-color);
   padding: 60px 0;
   font-size: 13px;
 }
@@ -150,28 +150,28 @@ function loadData() {
   margin-bottom: 16px;
 }
 .stat-card {
-  background: var(--dict-drawer-card-bg, #f7f9fb);
-  border: 1px solid var(--dict-drawer-border-color, #e8ecf0);
+  background: var(--dict-drawer-card-bg);
+  border: 1px solid var(--dict-drawer-border-color);
   border-radius: 6px;
-  padding: 10px 14px;
+  padding: 12px 16px;
   text-align: center;
 }
 .stat-num {
   font-size: 22px;
   font-weight: 700;
-  color: var(--dict-drawer-title-color, #2c3e50);
+  color: var(--dict-drawer-title-color);
 }
-.stat-num.success { color: var(--color-success, #27ae60); }
-.stat-num.danger  { color: var(--color-danger, #e74c3c); }
+.stat-num.success { color: var(--color-success); }
+.stat-num.danger  { color: var(--color-danger); }
 .stat-label {
   font-size: 11px;
-  color: var(--dict-drawer-subtext-color, #95a5a6);
+  color: var(--dict-drawer-subtext-color);
   margin-top: 4px;
 }
 .dict-item {
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
-  border: 1px solid var(--dict-drawer-border-color, #e8ecf0);
+  border: 1px solid var(--dict-drawer-border-color);
   border-radius: 6px;
   overflow: hidden;
   margin-bottom: 8px;
@@ -179,22 +179,22 @@ function loadData() {
 .dict-cell {
   display: grid;
   grid-template-columns: 70px 1fr;
-  border-right: 1px solid var(--dict-drawer-cell-divider, #f0f4f8);
+  border-right: 1px solid var(--dict-drawer-cell-divider);
 }
 .dict-cell:last-child {
   border-right: 0;
 }
 .dict-cell-key {
-  padding: 9px 14px;
+  padding: 8px 16px;
   font-size: 12px;
-  color: var(--dict-drawer-subtext-color, #888);
-  background: var(--dict-drawer-card-bg, #f7f9fb);
-  border-right: 1px solid var(--dict-drawer-cell-divider, #f0f4f8);
+  color: var(--dict-drawer-subtext-color);
+  background: var(--dict-drawer-card-bg);
+  border-right: 1px solid var(--dict-drawer-cell-divider);
 }
 .dict-cell-val {
-  padding: 9px 14px;
+  padding: 8px 16px;
   font-size: 13px;
-  color: var(--dict-drawer-title-color, #2c3e50);
+  color: var(--dict-drawer-title-color);
   word-break: break-all;
   display: flex;
   align-items: center;

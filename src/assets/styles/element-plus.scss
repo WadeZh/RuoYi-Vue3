@@ -557,32 +557,7 @@ html.dark {
   --tags-card-active-bg: color-mix(in srgb, var(--el-color-primary) 22%, var(--el-bg-color-overlay) 78%);
   --tags-card-active-border: var(--tags-card-active-bg);
 
-  /* 字典详情抽屉 */
-  --dict-drawer-title-color: var(--text-primary);
-  --dict-drawer-subtext-color: var(--text-secondary);
-  --dict-drawer-card-bg: var(--el-bg-color-overlay);
-  --dict-drawer-border-color: var(--border-base);
-  --dict-drawer-cell-divider: var(--border-lighter);
-
-  /* 通知公告详情抽屉 */
-  --notice-title-color: var(--text-primary);
-  --notice-meta-color: var(--text-secondary);
-  --notice-meta-icon-color: #64748b;
-  --notice-border-color: var(--border-base);
-  --notice-body-bg: var(--el-bg-color-overlay);
-  --notice-body-shadow: 0 1px 4px rgba(0, 0, 0, 0.3), 0 0 0 1px rgba(255, 255, 255, 0.04);
-  --notice-content-color: var(--text-regular);
-  --notice-drawer-body-bg: var(--bg-surface);
-  --notice-divider-gradient: linear-gradient(to right, transparent, var(--border-base), transparent);
-  --notice-divider-dot-color: var(--border-base);
-  --notice-blockquote-bg: var(--bg-surface);
-  --notice-blockquote-border: var(--border-base);
-  --notice-table-border: var(--border-base);
-  --notice-table-header-bg: var(--bg-surface);
-  --notice-tag-notify-bg: rgba(217, 119, 6, 0.15);
-  --notice-tag-notify-color: #f6ad55;
-  --notice-tag-announce-bg: rgba(56, 161, 105, 0.15);
-  --notice-tag-announce-color: #68d391;
+  /* 通知/字典详情抽屉变量已迁移至 tokens.scss（亮色 :root + 暗色 html.dark） */
 
   /* 通知详情内容配色 */
   .notice-detail-drawer .notice-content {

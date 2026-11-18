@@ -1,7 +1,7 @@
 <template>
   <div class="lock-container">
     <!-- 动态粒子背景 -->
-    <canvas ref="particleCanvas" class="particle-bg"></canvas>
+    <canvas ref="particleCanvas" class="particle-bg" aria-hidden="true"></canvas>
 
     <!-- 时钟 -->
     <div class="lock-time">{{ currentTime }}</div>
@@ -11,7 +11,7 @@
     <div class="lock-card">
       <div class="avatar-wrap">
         <img :src="userStore.avatar" class="lock-avatar" @error="onAvatarError" />
-        <div class="lock-icon">🔒</div>
+        <div class="lock-icon"><el-icon :size="13"><Lock /></el-icon></div>
       </div>
       <div class="lock-username">{{ userStore.nickName }}</div>
       <div class="lock-hint">系统已锁定，请输入密码解锁</div>
@@ -182,7 +182,7 @@ onBeforeUnmount(() => {
   align-items: center;
   justify-content: center;
   z-index: 9999;
-  font-family: 'PingFang SC', 'Microsoft YaHei', sans-serif;
+  font-family: var(--font-sans);
   overflow: hidden;
 }
 
@@ -197,9 +197,9 @@ onBeforeUnmount(() => {
   z-index: 1;
   font-size: 72px;
   font-weight: 200;
-  color: #fff;
+  color: var(--lock-fg);
   letter-spacing: 4px;
-  text-shadow: 0 0 40px rgba(255,255,255,0.3);
+  text-shadow: 0 0 40px var(--lock-time-glow);
   margin-bottom: 8px;
   font-variant-numeric: tabular-nums;
 }
@@ -208,25 +208,25 @@ onBeforeUnmount(() => {
   position: relative;
   z-index: 1;
   font-size: 15px;
-  color: rgba(255,255,255,0.6);
+  color: var(--lock-fg-muted);
   margin-bottom: 48px;
-  letter-spacing: 2px;
+  letter-spacing: normal;
 }
 
 .lock-card {
   position: relative;
   z-index: 1;
-  background: rgba(255, 255, 255, 0.08);
+  background: var(--lock-panel-bg);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
-  border: 1px solid rgba(255, 255, 255, 0.15);
+  border: 1px solid var(--lock-panel-border);
   border-radius: 24px;
   padding: 40px 48px;
   width: 360px;
   display: flex;
   flex-direction: column;
   align-items: center;
-  box-shadow: 0 25px 60px rgba(0,0,0,0.4);
+  box-shadow: 0 25px 60px var(--lock-panel-shadow);
 }
 
 .avatar-wrap {
@@ -238,7 +238,7 @@ onBeforeUnmount(() => {
   width: 80px;
   height: 80px;
   border-radius: 50%;
-  border: 3px solid rgba(255,255,255,0.3);
+  border: 3px solid var(--lock-avatar-border);
   object-fit: cover;
   display: block;
 }
@@ -247,7 +247,7 @@ onBeforeUnmount(() => {
   position: absolute;
   bottom: -4px;
   right: -4px;
-  background: rgba(255,255,255,0.15);
+  background: var(--lock-icon-bg);
   border-radius: 50%;
   width: 26px;
   height: 26px;
@@ -259,15 +259,15 @@ onBeforeUnmount(() => {
 }
 
 .lock-username {
-  color: #fff;
+  color: var(--lock-fg);
   font-size: 18px;
   font-weight: 600;
-  margin-bottom: 6px;
+  margin-bottom: 8px;
   letter-spacing: 1px;
 }
 
 .lock-hint {
-  color: rgba(255,255,255,0.5);
+  color: var(--lock-fg-muted);
   font-size: 13px;
   margin-bottom: 28px;
 }
@@ -276,16 +276,17 @@ onBeforeUnmount(() => {
   width: 100%;
   display: flex;
   align-items: center;
-  background: rgba(255,255,255,0.1);
-  border: 1px solid rgba(255,255,255,0.2);
+  background: var(--lock-input-bg);
+  border: 1px solid var(--lock-input-border);
   border-radius: 50px;
   padding: 4px 4px 4px 20px;
   transition: border-color 0.3s;
 }
 
 .input-wrap:focus-within {
-  border-color: var(--color-primary);
-  background: rgba(255,255,255,0.13);
+  background: var(--lock-input-bg-focus);
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
 }
 
 .input-wrap.shake {
@@ -305,13 +306,13 @@ onBeforeUnmount(() => {
   background: transparent;
   border: none;
   outline: none;
-  color: #fff;
+  color: var(--lock-fg);
   font-size: 15px;
-  padding: 10px 0;
+  padding: 12px 0px;
 }
 
 .lock-input::placeholder {
-  color: rgba(255,255,255,0.35);
+  color: var(--lock-fg-faint);
 }
 
 .unlock-btn {
@@ -320,7 +321,7 @@ onBeforeUnmount(() => {
   border-radius: 50%;
   background: linear-gradient(135deg, var(--color-primary), var(--color-primary-hover));
   border: none;
-  color: #fff;
+  color: var(--lock-fg);
   font-size: 18px;
   cursor: pointer;
   transition: transform 0.2s, opacity 0.2s;
@@ -341,11 +342,11 @@ onBeforeUnmount(() => {
 
 .loading-dot {
   font-size: 13px;
-  letter-spacing: 1px;
+  letter-spacing: normal;
 }
 
 .error-msg {
-  margin-top: 14px;
+  margin-top: 16px;
   color: var(--color-danger);
   filter: brightness(1.4);
   font-size: 13px;
@@ -363,13 +364,13 @@ onBeforeUnmount(() => {
 }
 
 .lock-footer a {
-  color: rgba(255,255,255,0.4);
+  color: var(--lock-fg-ghost);
   font-size: 13px;
   text-decoration: none;
   transition: color 0.2s;
 }
 
 .lock-footer a:hover {
-  color: rgba(255,255,255,0.8);
+  color: var(--lock-fg-strong);
 }
 </style>

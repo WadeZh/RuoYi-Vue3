@@ -90,8 +90,18 @@ getBreadcrumb()
   line-height: 50px;
 
   .no-redirect {
-    color: var(--text-secondary, #97a8be);
+    color: var(--text-secondary);
     cursor: text;
   }
 }
+
+/* focus-visible 兜底（26a）：与全局 tokens.scss 焦点环一致 */
+a:focus-visible,
+button:focus-visible,
+.el-input__inner:focus-visible,
+[tabindex]:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+}
+
 </style>

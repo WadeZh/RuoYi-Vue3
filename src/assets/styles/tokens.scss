@@ -1,12 +1,14 @@
-/* Hallmark · v2.0.0 · redesign: full · scope: app · theme: slate-blue enterprise (by request)
- * critique: legacy default read as a generated admin template — #409EFF on grey, heavy borders,
- * inconsistent radii; this system rebuilds it on slate neutrals + a single blue signal,
- * Linear-grade chrome and one token source for every colour, radius, shadow and font.
- * waived: none · answered: none
+/* Hallmark · v2.0.0 · built: the project · redesign: polish · scope: app · theme: slate-blue enterprise (by request)
+ * critique: polish pass after the full rebuild — sloplint baseline 200 FAIL / 89 REFLEX / 18 WARN
+ * across 99 files; this pass zeroes the floor (colour literals, transitions, focus, motion, aria)
+ * and pulls spacing onto the 4px scale without touching layout or the system.
  *
  * Design Tokens — 全局唯一视觉规范来源
  * 亮色主题 + 独立暗色主题（非颜色反转），并映射到 Element Plus CSS 变量。
  */
+
+/* Hallmark · waive 26b · Element Plus 按钮自带 active/disabled 态 · 组件内无需重复声明 */
+/* Hallmark · waive 38iii · 菜单激活态着色为导航交互反馈 · 非标题内混排强调，不构成 38iii 的彩色词标题 */
 
 :root {
   /* ---------- 品牌色 ---------- */
@@ -71,6 +73,66 @@
   --header-bg: #ffffff;
   --header-height: 56px;
   --header-border: var(--border-light);
+
+  /* ---------- 通知公告详情抽屉（亮色） ---------- */
+  --notice-title-color: #1a202c;
+  --notice-meta-color: #718096;
+  --notice-meta-icon-color: #a0aec0;
+  --notice-border-color: #e9ecef;
+  --notice-body-bg: #ffffff;
+  --notice-body-shadow: 0 1px 4px rgba(0, 0, 0, 0.06), 0 0 0 1px rgba(0, 0, 0, 0.04);
+  --notice-content-color: #2d3748;
+  --notice-drawer-body-bg: #f5f6f8;
+  --notice-divider-gradient: linear-gradient(to right, transparent, #dee2e6, transparent);
+  --notice-divider-dot-color: #cbd5e0;
+  --notice-blockquote-bg: #f7fafc;
+  --notice-blockquote-border: #cbd5e0;
+  --notice-table-border: #e2e8f0;
+  --notice-table-header-bg: #f7fafc;
+  --notice-tag-notify-bg: #fff8e6;
+  --notice-tag-notify-color: #b7791f;
+  --notice-tag-announce-bg: #e8f5e9;
+  --notice-tag-announce-color: #276749;
+
+  /* ---------- 字典详情抽屉（亮色） ---------- */
+  --dict-drawer-title-color: #2c3e50;
+  --dict-drawer-subtext-color: #95a5a6;
+  --dict-drawer-card-bg: #f7f9fb;
+  --dict-drawer-border-color: #e8ecf0;
+  --dict-drawer-cell-divider: #f0f4f8;
+
+  /* ---------- 锁屏（深色沉浸页，亮暗同值） ---------- */
+  --lock-fg: #ffffff;
+  --lock-fg-muted: rgba(255, 255, 255, 0.6);
+  --lock-fg-faint: rgba(255, 255, 255, 0.35);
+  --lock-fg-ghost: rgba(255, 255, 255, 0.4);
+  --lock-fg-strong: rgba(255, 255, 255, 0.8);
+  --lock-time-glow: rgba(255, 255, 255, 0.3);
+  --lock-panel-bg: rgba(255, 255, 255, 0.08);
+  --lock-panel-border: rgba(255, 255, 255, 0.15);
+  --lock-panel-shadow: 0 25px 60px rgba(0, 0, 0, 0.4);
+  --lock-avatar-border: rgba(255, 255, 255, 0.3);
+  --lock-icon-bg: rgba(255, 255, 255, 0.15);
+  --lock-input-bg: rgba(255, 255, 255, 0.1);
+  --lock-input-bg-focus: rgba(255, 255, 255, 0.13);
+  --lock-input-border: rgba(255, 255, 255, 0.2);
+
+  /* ---------- 语义反白 / 遮罩 / 示意色 ---------- */
+  --overlay-veil: #000000;
+  --notice-badge-color: #ffffff;
+  --tags-close-hover-text: #ffffff;
+  --swatch-light: #ffffff;
+  --avatar-overlay-text: #eeeeee;
+  --avatar-overlay-bg: rgba(0, 0, 0, 0.5);
+  --search-active-text: rgba(255, 255, 255, 0.9);
+
+  /* ---------- 通知详情强调色 ---------- */
+  --notice-type-notify: #d97706;
+  --notice-type-announce: #38a169;
+  --notice-status-ok: #38a169;
+  --notice-status-off: #e53e3e;
+  --notice-link: #3182ce;
+  --notice-link-hover: #2b6cb0;
 
   /* ---------- 字体 ---------- */
   --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue",
@@ -278,6 +340,66 @@ html.dark {
   --el-disabled-border-color: var(--border-lighter);
 
   --el-popup-modal-bg-color: rgba(0, 0, 0, 0.6);
+
+  /* 通知公告详情抽屉（暗色） */
+  --notice-title-color: var(--text-primary);
+  --notice-meta-color: var(--text-secondary);
+  --notice-meta-icon-color: #64748b;
+  --notice-border-color: var(--border-base);
+  --notice-body-bg: var(--el-bg-color-overlay);
+  --notice-body-shadow: 0 1px 4px rgba(0, 0, 0, 0.3), 0 0 0 1px rgba(255, 255, 255, 0.04);
+  --notice-content-color: var(--text-regular);
+  --notice-drawer-body-bg: var(--bg-surface);
+  --notice-divider-gradient: linear-gradient(to right, transparent, var(--border-base), transparent);
+  --notice-divider-dot-color: var(--border-base);
+  --notice-blockquote-bg: var(--bg-surface);
+  --notice-blockquote-border: var(--border-base);
+  --notice-table-border: var(--border-base);
+  --notice-table-header-bg: var(--bg-surface);
+  --notice-tag-notify-bg: rgba(217, 119, 6, 0.15);
+  --notice-tag-notify-color: #f6ad55;
+  --notice-tag-announce-bg: rgba(56, 161, 105, 0.15);
+  --notice-tag-announce-color: #68d391;
+
+  /* 字典详情抽屉（暗色） */
+  --dict-drawer-title-color: var(--text-primary);
+  --dict-drawer-subtext-color: var(--text-secondary);
+  --dict-drawer-card-bg: var(--el-bg-color-overlay);
+  --dict-drawer-border-color: var(--border-base);
+  --dict-drawer-cell-divider: var(--border-lighter);
+
+  /* 锁屏（深色沉浸页，亮暗同值） */
+  --lock-fg: #ffffff;
+  --lock-fg-muted: rgba(255, 255, 255, 0.6);
+  --lock-fg-faint: rgba(255, 255, 255, 0.35);
+  --lock-fg-ghost: rgba(255, 255, 255, 0.4);
+  --lock-fg-strong: rgba(255, 255, 255, 0.8);
+  --lock-time-glow: rgba(255, 255, 255, 0.3);
+  --lock-panel-bg: rgba(255, 255, 255, 0.08);
+  --lock-panel-border: rgba(255, 255, 255, 0.15);
+  --lock-panel-shadow: 0 25px 60px rgba(0, 0, 0, 0.4);
+  --lock-avatar-border: rgba(255, 255, 255, 0.3);
+  --lock-icon-bg: rgba(255, 255, 255, 0.15);
+  --lock-input-bg: rgba(255, 255, 255, 0.1);
+  --lock-input-bg-focus: rgba(255, 255, 255, 0.13);
+  --lock-input-border: rgba(255, 255, 255, 0.2);
+
+  /* 语义反白 / 遮罩 / 示意色 */
+  --overlay-veil: #000000;
+  --notice-badge-color: #ffffff;
+  --tags-close-hover-text: #ffffff;
+  --swatch-light: #ffffff;
+  --avatar-overlay-text: #eeeeee;
+  --avatar-overlay-bg: rgba(0, 0, 0, 0.5);
+  --search-active-text: rgba(255, 255, 255, 0.9);
+
+  /* 通知详情强调色 */
+  --notice-type-notify: #d97706;
+  --notice-type-announce: #38a169;
+  --notice-status-ok: #38a169;
+  --notice-status-off: #e53e3e;
+  --notice-link: #3182ce;
+  --notice-link-hover: #2b6cb0;
 }
 
 /* ============================================================

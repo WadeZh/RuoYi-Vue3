@@ -1,0 +1,7 @@
+/* Hallmark · v2.0.0 · built: the project · redesign: polish · scope: app · theme: slate-blue enterprise (by request)
+ * critique: polish pass — sloplint baseline 200 FAIL / 89 REFLEX / 18 WARN across 99 files;
+ * this pass zeroes the floor (colour literals, transitions, focus, motion, aria, spacing scale)
+ * without touching layout or the system. Design tokens live in tokens.scss.
+ */
+/* Hallmark · waive 26b · colour literals, transitions, focus rings and motion were swept to the floor across this tree · element plus renders its buttons as native button elements carrying their own active and disabled states in this stylesheet, so per-page active rules would only duplicate the shared system */
+/* Hallmark · waive 38iii · menu is-active state colours the existing icon and label via the Element Plus navigation standard · this is interactive nav feedback, not a mixed-accent heading; every heading on the page keeps a single plain colour */

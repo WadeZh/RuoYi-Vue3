@@ -254,7 +254,7 @@ onMounted(() => {
 }
 .popup-main {
     position: relative;
-    margin: 10px auto;
+    margin: 12px auto;
     border-radius: 5px;
     font-size: 12px;
     overflow: hidden;
@@ -262,15 +262,15 @@ onMounted(() => {
 .popup-title {
     overflow: hidden;
     line-height: 34px;
-    padding-top: 6px;
-    background: var(--bg-surface-2, #f2f2f2);
+    padding-top: 8px;
+    background: var(--bg-surface-2);
 }
 .popup-result {
     box-sizing: border-box;
     line-height: 24px;
-    margin: 25px auto;
-    padding: 15px 10px 10px;
-    border: 1px solid var(--border-base, #ccc);
+    margin: 24px auto;
+    padding: 16px 12px 12px;
+    border: 1px solid var(--border-base);
     position: relative;
 }
 .popup-result .title {
@@ -279,10 +279,10 @@ onMounted(() => {
     left: 50%;
     width: 140px;
     font-size: 14px;
-    margin-left: -70px;
+    margin-left: 0; transform: translateX(-50%);
     text-align: center;
     line-height: 30px;
-    background: var(--bg-surface, #fff);
+    background: var(--bg-surface);
 }
 .popup-result table {
     text-align: center;
@@ -297,12 +297,12 @@ onMounted(() => {
 .popup-result table span {
     display: block;
     width: 100%;
-    font-family: arial;
+    font-family: var(--font-mono);
     line-height: 30px;
     height: 30px;
     white-space: nowrap;
     overflow: hidden;
-    border: 1px solid var(--border-light, #e8e8e8);
+    border: 1px solid var(--border-light);
 }
 .popup-result-scroll {
     font-size: 12px;

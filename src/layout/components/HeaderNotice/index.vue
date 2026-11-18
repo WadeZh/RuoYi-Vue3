@@ -174,8 +174,8 @@ function markAllRead() {
     position: absolute;
     top: 7px;
     right: -3px;
-    background: var(--color-danger, #f56c6c);
-    color: #fff;
+    background: var(--color-danger);
+    color: var(--notice-badge-color);
     border-radius: 10px;
     font-size: 10px;
     height: 16px;
@@ -192,12 +192,12 @@ function markAllRead() {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 10px 14px;
-  background: var(--bg-surface-2, #f7f9fb);
-  border-bottom: 1px solid var(--border-light, #eee);
+  padding: 12px 16px;
+  background: var(--bg-surface-2);
+  border-bottom: 1px solid var(--border-light);
   font-size: 13px;
   font-weight: 600;
-  color: var(--text-primary, #333);
+  color: var(--text-primary);
 }
 .notice-popover .notice-mark-all {
   font-size: 12px;
@@ -205,12 +205,12 @@ function markAllRead() {
   font-weight: normal;
   cursor: pointer;
 }
-.notice-popover .notice-mark-all:hover { color: var(--color-primary-hover, #2b7cc1); }
+.notice-popover .notice-mark-all:hover { color: var(--color-primary-hover); }
 .notice-popover .notice-loading,
 .notice-popover .notice-empty {
   padding: 24px;
   text-align: center;
-  color: var(--text-disabled, #bbb);
+  color: var(--text-disabled);
   font-size: 12px;
   line-height: 1.8;
 }
@@ -218,21 +218,21 @@ function markAllRead() {
   display: flex;
   align-items: center;
   gap: 8px;
-  padding: 10px 14px;
-  border-bottom: 1px solid var(--border-lighter, #f5f5f5);
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--border-lighter);
   cursor: pointer;
   transition: background 0.15s;
 }
 .notice-popover .notice-item:last-child { border-bottom: none; }
-.notice-popover .notice-item:hover { background: var(--bg-surface-2, #f7f9fb); }
+.notice-popover .notice-item:hover { background: var(--bg-surface-2); }
 .notice-popover .notice-item.is-read .notice-tag,
 .notice-popover .notice-item.is-read .notice-item-title,
-.notice-popover .notice-item.is-read .notice-item-date { opacity: 0.45; filter: grayscale(1); color: var(--text-secondary, #999); }
+.notice-popover .notice-item.is-read .notice-item-date { opacity: 0.45; filter: grayscale(1); color: var(--text-secondary); }
 .notice-popover .notice-tag { flex-shrink: 0; }
 .notice-popover .notice-item-title {
   flex: 1;
   font-size: 12px;
-  color: var(--text-primary, #333);
+  color: var(--text-primary);
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
@@ -240,16 +240,16 @@ function markAllRead() {
 .notice-popover .notice-item-date {
   flex-shrink: 0;
   font-size: 11px;
-  color: var(--text-disabled, #bbb);
+  color: var(--text-disabled);
 }
 .notice-popover .notice-footer {
-  padding: 10px 14px;
+  padding: 12px 16px;
   text-align: center;
   font-size: 12px;
   color: var(--el-color-primary);
-  border-top: 1px solid var(--border-light, #eee);
+  border-top: 1px solid var(--border-light);
   cursor: pointer;
   transition: background 0.15s;
 }
-.notice-popover .notice-footer:hover { background: var(--bg-surface-2, #f7f9fb); }
+.notice-popover .notice-footer:hover { background: var(--bg-surface-2); }
 </style>

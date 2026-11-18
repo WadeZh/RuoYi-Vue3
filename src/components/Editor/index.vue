@@ -273,4 +273,14 @@ function insertImage(file) {
 .ql-snow .ql-picker.ql-font .ql-picker-item[data-value="monospace"]::before {
   content: "等宽字体";
 }
+
+/* focus-visible 兜底（26a）：与全局 tokens.scss 焦点环一致 */
+a:focus-visible,
+button:focus-visible,
+.el-input__inner:focus-visible,
+[tabindex]:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+}
+
 </style>

@@ -82,6 +82,6 @@ function isValueMatch(itemValue) {
 
 <style scoped>
 .el-tag + .el-tag {
-  margin-left: 10px;
+  margin-left: 12px;
 }
 </style>

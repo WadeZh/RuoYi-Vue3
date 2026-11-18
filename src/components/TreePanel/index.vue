@@ -557,7 +557,6 @@ onBeforeUnmount(() => {
   flex-direction: column;
   overflow: hidden;
   position: relative;
-  transition: width 0.25s ease;
   
   &.collapsed {
     width: 42px;
@@ -610,8 +609,8 @@ onBeforeUnmount(() => {
   height: 20px;
   background: var(--bg-surface);
   border-radius: 0 4px 4px 0;
-  box-shadow: var(--shadow-sm, 0 1px 3px rgba(0, 0, 0, 0.1));
-  transition: all 0.2s ease;
+  box-shadow: var(--shadow-sm);
+  transition: background-color 0.2s ease, border-radius 0.2s ease;
 
   .tree-sidebar.collapsed & {
     right: 0;
@@ -630,7 +629,7 @@ onBeforeUnmount(() => {
   cursor: pointer;
   padding: 4px;
   border-radius: 4px;
-  transition: all 0.2s;
+  transition: color 0.2s, background-color 0.2s;
 
   &:hover {
     color: var(--color-primary);
@@ -642,7 +641,7 @@ onBeforeUnmount(() => {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0 10px;
+  padding: 0px 12px;
   height: 40px;
   border-bottom: 1px solid var(--border-light);
   background: var(--bg-surface-2);
@@ -656,7 +655,7 @@ onBeforeUnmount(() => {
     overflow: hidden;
     display: flex;
     align-items: center;
-    gap: 5px;
+    gap: 4px;
 
     .el-icon {
       color: var(--color-primary);
@@ -678,7 +677,7 @@ onBeforeUnmount(() => {
   cursor: pointer;
   padding: 4px;
   border-radius: 4px;
-  transition: all 0.2s;
+  transition: color 0.2s, background-color 0.2s;
 
   &:hover {
     color: var(--color-primary);
@@ -687,14 +686,14 @@ onBeforeUnmount(() => {
 }
 
 .tree-search {
-  padding: 10px 10px 4px;
+  padding: 12px 12px 4px;
   flex-shrink: 0;
 }
 
 .tree-wrap {
   flex: 1;
   overflow-y: auto;
-  padding: 6px 6px 12px;
+  padding: 8px 8px 12px;
   
   .tree-sidebar.resizing & {
     overflow: hidden;
@@ -737,7 +736,7 @@ onBeforeUnmount(() => {
 .tree-node {
   display: flex;
   align-items: center;
-  gap: 5px;
+  gap: 4px;
   font-size: var(--text-sm);
   overflow: hidden;
 

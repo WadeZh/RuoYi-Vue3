@@ -28,7 +28,7 @@
               {{ d }}
             </el-tag>
           </template>
-          <span v-else class="muted">—</span>
+          <span v-else class="muted">无</span>
         </template>
       </el-table-column>
     </el-table>

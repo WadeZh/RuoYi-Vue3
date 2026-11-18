@@ -235,12 +235,12 @@ onMounted(() => {
   background: color-mix(in srgb, var(--color-primary) 12%, transparent);
 }
 .upload-file-uploader {
-  margin-bottom: 5px;
+  margin-bottom: 4px;
 }
 .upload-file-list .el-upload-list__item {
-  border: 1px solid var(--border-light, #e4e7ed);
+  border: 1px solid var(--border-light);
   line-height: 2;
-  margin-bottom: 10px;
+  margin-bottom: 12px;
   position: relative;
   transition: none !important;
 }
@@ -251,6 +251,6 @@ onMounted(() => {
   color: inherit;
 }
 .ele-upload-list__item-content-action .el-link {
-  margin-right: 10px;
+  margin-right: 12px;
 }
 </style>

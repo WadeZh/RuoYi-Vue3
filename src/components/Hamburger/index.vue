@@ -2,6 +2,7 @@
   <div class="hamburger-trigger" @click="toggleClick">
     <svg
       :class="{'is-active':isActive}"
+      aria-hidden="true"
       class="hamburger"
       viewBox="0 0 1024 1024"
       xmlns="http://www.w3.org/2000/svg"
@@ -35,7 +36,7 @@ const toggleClick = () => {
   justify-content: center;
   height: 100%;
   padding: 0 8px;
-  color: var(--text-regular, #64748b);
+  color: var(--text-regular);
   cursor: pointer;
 }
 
@@ -49,5 +50,11 @@ const toggleClick = () => {
 
 .hamburger.is-active {
   transform: rotate(180deg);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hamburger {
+    transition: none;
+  }
 }
 </style>

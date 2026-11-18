@@ -245,7 +245,7 @@ defineExpose({
 <style lang='scss' scoped>
 .setting-drawer-title {
   margin-bottom: 12px;
-  color: var(--el-text-color-primary, rgba(0, 0, 0, 0.85));
+  color: var(--el-text-color-primary);
   line-height: 22px;
   font-weight: bold;
 
@@ -258,7 +258,7 @@ defineExpose({
   display: flex;
   justify-content: flex-start;
   align-items: center;
-  margin-top: 10px;
+  margin-top: 12px;
   margin-bottom: 20px;
 
   .setting-drawer-block-checbox-item {
@@ -279,9 +279,9 @@ defineExpose({
       right: 0;
       width: 100%;
       height: 100%;
-      padding-top: 15px;
+      padding-top: 16px;
       padding-left: 24px;
-      color: var(--color-primary, #1890ff);
+      color: var(--color-primary);
       font-weight: 700;
       font-size: 14px;
     }
@@ -289,13 +289,13 @@ defineExpose({
 }
 
 .drawer-item {
-  color: var(--el-text-color-regular, rgba(0, 0, 0, 0.65));
+  color: var(--el-text-color-regular);
   padding: 12px 0;
   font-size: 14px;
 
   .comp-style {
     float: right;
-    margin: -3px 8px 0px 0px;
+    margin: -4-px 8px 0px 0px;
   }
 }
 
@@ -304,7 +304,7 @@ defineExpose({
   display: flex;
   justify-content: flex-start;
   align-items: center;
-  margin-top: 10px;
+  margin-top: 12px;
   margin-bottom: 20px;
 
   .activeItem {
@@ -318,7 +318,7 @@ defineExpose({
     width: 56px;
     height: 48px;
     border-radius: var(--radius-md, 8px);
-    background: var(--bg-muted, #f0f2f5);
+    background: var(--bg-muted);
     border: 2px solid transparent;
     overflow: hidden;
   }
@@ -327,11 +327,11 @@ defineExpose({
     b:first-child {
       display: block;
       height: 30%;
-      background: #fff;
+      background: var(--swatch-light);
     }
     b:last-child {
       width: 30%;
-      background: var(--neutral-800, #1e293b);
+      background: var(--neutral-800);
       position: absolute;
       height: 100%;
       top: 0;
@@ -343,11 +343,11 @@ defineExpose({
       border-radius: 4px 4px 0 0;
       display: block;
       height: 30%;
-      background: var(--neutral-800, #1e293b);
+      background: var(--neutral-800);
     }
     b:last-child {
       width: 30%;
-      background: var(--neutral-800, #1e293b);
+      background: var(--neutral-800);
       position: absolute;
       height: 70%;
       border-radius: 0 0 0 4px;
@@ -357,7 +357,7 @@ defineExpose({
     b:first-child {
       display: block;
       height: 30%;
-      background: var(--neutral-800, #1e293b);
+      background: var(--neutral-800);
       border-radius: 4px 4px 0 0;
     }
   }

@@ -14,7 +14,7 @@ const { isFullscreen, toggle } = useFullscreen()
 .screenfull-svg {
   display: inline-block;
   cursor: pointer;
-  fill: var(--text-regular, #64748b);
+  fill: var(--text-regular);
   width: 20px;
   height: 20px;
   vertical-align: 10px;

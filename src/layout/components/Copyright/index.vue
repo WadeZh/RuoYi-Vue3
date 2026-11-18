@@ -20,7 +20,7 @@ const content = computed(() => settingsStore.footerContent)
   left: 0;
   right: 0;
   height: 36px;
-  padding: 10px 20px;
+  padding: 12px 20px;
   text-align: right;
   background-color: var(--bg-surface);
   color: var(--text-secondary);

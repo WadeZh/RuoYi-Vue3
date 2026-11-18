@@ -129,7 +129,7 @@ const sources = computed(() => props.node?.sources || [])
   }
 
   .perm-code {
-    padding: 2px 6px;
+    padding: 4px 8px;
     border-radius: var(--radius-sm);
     background: var(--bg-surface-2);
     font-family: var(--font-mono, monospace);

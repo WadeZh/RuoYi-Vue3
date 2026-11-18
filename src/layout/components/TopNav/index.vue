@@ -180,14 +180,14 @@ onMounted(() => {
   float: left;
   height: 56px !important;
   line-height: 56px !important;
-  color: var(--text-primary, #303133) !important;
-  padding: 0 5px !important;
-  margin: 0 10px !important;
+  color: var(--text-primary) !important;
+  padding: 0px 4px !important;
+  margin: 0px 12px !important;
 }
 
 .topmenu-container.el-menu--horizontal > .el-menu-item.is-active, .el-menu--horizontal > .el-sub-menu.is-active .el-submenu__title {
   border-bottom: 2px solid #{'var(--theme)'} !important;
-  color: var(--text-primary, #303133);
+  color: var(--text-primary);
 }
 
 /* sub-menu item */
@@ -195,9 +195,9 @@ onMounted(() => {
   float: left;
   height: 56px !important;
   line-height: 56px !important;
-  color: var(--text-primary, #303133) !important;
-  padding: 0 5px !important;
-  margin: 0 10px !important;
+  color: var(--text-primary) !important;
+  padding: 0px 4px !important;
+  margin: 0px 12px !important;
 }
 
 /* 背景色隐藏 */

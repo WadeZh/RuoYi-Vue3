@@ -53,13 +53,20 @@ const getLogoTextColor = computed(() => {
 </script>
 
 <style lang="scss" scoped>
+/* 进入用 keyframes（无静止隐藏规则）；离开瞬时隐藏由 Vue 运行时类驱动 */
 .sidebarLogoFade-enter-active {
-  transition: opacity 0.3s var(--ease-out, ease);
+  animation: logoFadeIn 0.3s var(--ease-out, ease);
 }
 
-.sidebarLogoFade-enter,
-.sidebarLogoFade-leave-to {
-  opacity: 0;
+@keyframes logoFadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sidebarLogoFade-enter-active {
+    animation: none;
+  }
 }
 
 .sidebar-logo-container {
@@ -83,7 +90,7 @@ const getLogoTextColor = computed(() => {
       width: 28px;
       height: 28px;
       flex-shrink: 0;
-      margin-right: 10px;
+      margin-right: 12px;
     }
 
     & .sidebar-title {

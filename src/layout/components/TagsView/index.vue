@@ -427,8 +427,8 @@ $tags-bar-height: 40px;
 .tags-view-container {
   height: $tags-bar-height;
   width: 100%;
-  background: var(--tags-bg, var(--header-bg, #fff));
-  border-bottom: 1px solid var(--header-border, var(--tags-item-border, #d8dce5));
+  background: var(--tags-bg);
+  border-bottom: 1px solid var(--header-border);
   display: flex;
   align-items: center;
   overflow: hidden;
@@ -443,24 +443,24 @@ $tags-bar-height: 40px;
     width: $btn-width;
     height: $tags-bar-height;
     cursor: pointer;
-    color: var(--text-secondary, #71717a);
+    color: var(--text-secondary);
     font-size: 13px;
     user-select: none;
     transition: background-color var(--transition-fast, 0.15s) var(--ease-in-out, ease),
       color var(--transition-fast, 0.15s) var(--ease-in-out, ease);
 
     &:hover:not(.disabled) {
-      background: var(--bg-hover, #f0f2f5);
-      color: var(--text-primary, #303133);
+      background: var(--bg-hover);
+      color: var(--text-primary);
     }
 
     &:focus-visible {
-      outline: 2px solid var(--color-primary, #2563eb);
+      outline: 2px solid var(--color-primary);
       outline-offset: -2px;
     }
 
     &.disabled {
-      color: var(--text-disabled, #c0c4cc);
+      color: var(--text-disabled);
       cursor: not-allowed;
     }
 
@@ -483,11 +483,11 @@ $tags-bar-height: 40px;
       height: 26px;
       line-height: 1;
       border: 1px solid transparent;
-      color: var(--tags-item-text, var(--text-secondary, #495060));
+      color: var(--tags-item-text);
       background: transparent;
-      padding: 0 10px;
+      padding: 0px 12px;
       font-size: 12px;
-      margin-left: 6px;
+      margin-left: 8px;
       border-radius: var(--radius-full, 999px);
       text-decoration: none;
       vertical-align: middle;
@@ -496,22 +496,22 @@ $tags-bar-height: 40px;
         border-color var(--transition-fast, 0.15s) var(--ease-in-out, ease);
 
       &:hover:not(.active) {
-        background: var(--tags-item-hover, var(--bg-hover, #f0f2f5));
-        color: var(--text-primary, #303133);
+        background: var(--tags-item-hover);
+        color: var(--text-primary);
       }
 
       &:focus-visible {
-        outline: 2px solid var(--color-primary, #2563eb);
+        outline: 2px solid var(--color-primary);
         outline-offset: -2px;
       }
 
       &:first-of-type { margin-left: 8px; }
-      &:last-of-type  { margin-right: 15px; }
+      &:last-of-type  { margin-right: 16px; }
 
       .tag-pin {
         margin-left: 4px;
         font-size: 12px;
-        color: var(--current-color, #2563eb);
+        color: var(--current-color);
         opacity: 0.85;
       }
     }
@@ -520,17 +520,17 @@ $tags-bar-height: 40px;
   /* card 模式激活态：主题色淡染胶囊（内联样式来自 tagActiveStyle） */
   &:not(.tags-view-container--chrome) .tags-view-wrapper .tags-view-item.active {
     font-weight: var(--weight-medium, 500);
-    color: var(--current-color, #2563eb);
+    color: var(--current-color);
 
     &::before {
       content: '';
-      background: var(--current-color, #2563eb);
+      background: var(--current-color);
       display: inline-block;
       width: 6px;
       height: 6px;
       border-radius: 50%;
       position: relative;
-      margin-right: 6px;
+      margin-right: 8px;
     }
   }
 
@@ -551,7 +551,7 @@ $tags-bar-height: 40px;
     width: $btn-width;
     height: $tags-bar-height;
     cursor: pointer;
-    color: var(--text-secondary, #71717a);
+    color: var(--text-secondary);
     font-size: 13px;
     border-color: transparent;
     user-select: none;
@@ -559,12 +559,12 @@ $tags-bar-height: 40px;
       color var(--transition-fast, 0.15s) var(--ease-in-out, ease);
 
     &:hover {
-      background: var(--bg-hover, #f0f2f5);
-      color: var(--text-primary, #303133);
+      background: var(--bg-hover);
+      color: var(--text-primary);
     }
 
     &:focus-visible {
-      outline: 2px solid var(--color-primary, #2563eb);
+      outline: 2px solid var(--color-primary);
       outline-offset: -2px;
     }
   }
@@ -575,37 +575,37 @@ $tags-bar-height: 40px;
 
   .contextmenu {
     margin: 0;
-    background: var(--el-bg-color-overlay, #fff);
+    background: var(--el-bg-color-overlay);
     z-index: 3000;
     position: fixed;
     list-style-type: none;
-    padding: 5px;
+    padding: 4px;
     border-radius: var(--radius-lg, 12px);
     font-size: 12px;
     font-weight: 400;
-    color: var(--tags-item-text, var(--text-regular, #333));
-    box-shadow: var(--shadow-lg, 0 12px 32px rgba(15, 23, 42, 0.12));
-    border: 1px solid var(--border-light, #e4e7ed);
+    color: var(--tags-item-text);
+    box-shadow: var(--shadow-lg);
+    border: 1px solid var(--border-light);
     min-width: 132px;
 
     li {
       margin: 0;
-      padding: 7px 12px;
+      padding: 8px 12px;
       cursor: pointer;
       border-radius: var(--radius-sm, 6px);
       transition: background-color var(--transition-fast, 0.15s) var(--ease-in-out, ease);
 
       &:hover {
-        background: var(--bg-hover, #eee);
+        background: var(--bg-hover);
       }
     }
   }
 
   &.tags-view-container--chrome {
-    --chrome-strip-bg: var(--header-bg, #ffffff);
-    --chrome-strip-border: var(--header-border, var(--el-border-color-lighter, #e4e7ed));
-    --chrome-tab-active-bg: var(--bg-surface, #ffffff);
-    --chrome-tab-text: var(--el-text-color-regular, #606266);
+    --chrome-strip-bg: var(--header-bg);
+    --chrome-strip-border: var(--header-border);
+    --chrome-tab-active-bg: var(--bg-surface);
+    --chrome-tab-text: var(--el-text-color-regular);
     --chrome-tab-text-active: var(--el-color-primary);
     --chrome-wing-r: 10px;
 
@@ -677,28 +677,28 @@ $tags-bar-height: 40px;
         }
 
         &:first-of-type {
-          margin-left: 6px;
+          margin-left: 8px;
         }
 
         &:last-of-type {
-          margin-right: 10px;
+          margin-right: 12px;
         }
 
         &:not(.active) + .tags-view-item:not(.active) {
-          border-left: 1px solid var(--el-border-color-lighter, #e4e7ed);
-          padding-left: 11px;
+          border-left: 1px solid var(--el-border-color-lighter);
+          padding-left: 12px;
         }
 
         &:hover:not(.active) {
-          background: var(--el-fill-color-light, #f5f7fa) !important;
+          background: var(--el-fill-color-light) !important;
           border-radius: 8px 8px 0 0;
-          color: var(--el-text-color-primary, #303133);
+          color: var(--el-text-color-primary);
         }
 
         &.active {
           height: 33px;
           min-height: 33px;
-          padding: 0 14px;
+          padding: 0px 16px;
           color: var(--chrome-tab-text-active) !important;
           font-weight: 500;
           background: var(--chrome-tab-active-bg) !important;
@@ -746,10 +746,10 @@ $tags-bar-height: 40px;
       }
       
       &:hover {
-        background-color: var(--tags-close-hover, #b4bccc);
+        background-color: var(--tags-close-hover);
         
         .el-icon-close {
-          color: #fff;
+          color: var(--tags-close-hover-text);
         }
       }
     }
@@ -761,7 +761,7 @@ $tags-bar-height: 40px;
   position: fixed;
   top: 0;
   left: 0;
-  width: 100vw;
+  width: 100%;
   height: 100vh;
   overflow: hidden;
   margin-left: 0 !important;

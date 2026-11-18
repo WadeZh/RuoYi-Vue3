@@ -61,10 +61,10 @@ defineExpose({
 <style lang='scss' scoped>
    .icon-body {
     width: 100%;
-    padding: 10px;
+    padding: 12px;
     .icon-search {
       position: relative;
-      margin-bottom: 5px;
+      margin-bottom: 4px;
     }
     .icon-list {
       height: 200px;
@@ -82,9 +82,9 @@ defineExpose({
             display: flex;
             max-width: 100%;
             height: 100%;
-            padding: 0 5px;
+            padding: 0px 4px;
             &:hover {
-              background: var(--bg-hover, #ececec);
+              background: var(--bg-hover);
               border-radius: 5px;
             }
             .icon {
@@ -101,7 +101,7 @@ defineExpose({
             }
           }
           .icon-item.active {
-            background: var(--bg-hover, #ececec);
+            background: var(--bg-hover);
             border-radius: 5px;
           }
         }

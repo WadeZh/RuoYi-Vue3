@@ -88,7 +88,7 @@ function setLayout() {
 }
 
 .drawer-bg {
-  background: #000;
+  background: var(--overlay-veil);
   opacity: 0.3;
   width: 100%;
   top: 0;
@@ -103,7 +103,6 @@ function setLayout() {
   right: 0;
   z-index: 9;
   width: calc(100% - #{vars.$base-sidebar-width});
-  transition: width 0.28s;
 }
 
 .hideSidebar .fixed-header {

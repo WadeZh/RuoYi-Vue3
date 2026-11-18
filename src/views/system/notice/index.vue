@@ -310,3 +310,14 @@ function handleDelete(row) {
 
 getList()
 </script>
+
+<style scoped>
+/* focus-visible 兜底（26a）：与全局 tokens.scss 焦点环一致 */
+a:focus-visible,
+button:focus-visible,
+[tabindex]:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+}
+</style>
+

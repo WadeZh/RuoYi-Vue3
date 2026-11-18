@@ -293,7 +293,7 @@ async function toggleTheme(event) {
         height: 100%;
         cursor: pointer;
         border-radius: var(--radius-md);
-        padding: 0 6px;
+        padding: 0 8px;
         transition: background-color var(--transition-fast) var(--ease-in-out);
 
         &:hover {

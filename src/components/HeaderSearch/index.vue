@@ -311,7 +311,7 @@ watch(routes, (list) => {
 
 <style lang='scss' scoped>
 :deep(.el-dialog__header) {
-  padding: 6px !important;
+  padding: 8px !important;
 }
 
 :deep(.highlight) {
@@ -320,7 +320,7 @@ watch(routes, (list) => {
 }
 
 :deep(.is-active .highlight) {
-  color: rgba(255, 255, 255, 0.9);
+  color: var(--search-active-text);
   font-weight: 600;
 }
 
@@ -333,9 +333,9 @@ watch(routes, (list) => {
 }
 
 .result-count {
-  padding: 6px 16px 0;
+  padding: 8px 16px 0px;
   font-size: 12px;
-  color: var(--text-secondary, #aaa);
+  color: var(--text-secondary);
 
   strong {
     color: var(--color-danger, red);
@@ -351,7 +351,7 @@ watch(routes, (list) => {
     display: flex;
     height: 48px;
     align-items: center;
-    padding-right: 10px;
+    padding-right: 12px;
     border-radius: 4px;
     transition: background 0.15s;
 
@@ -367,8 +367,8 @@ watch(routes, (list) => {
     }
 
     .search-info {
-      padding-left: 5px;
-      margin-top: 10px;
+      padding-left: 4px;
+      margin-top: 12px;
       width: 100%;
       display: flex;
       flex-direction: column;
@@ -385,7 +385,7 @@ watch(routes, (list) => {
       }
 
       .menu-path {
-        color: var(--text-disabled, #ccc);
+        color: var(--text-disabled);
         font-size: 10px;
       }
     }
@@ -399,22 +399,22 @@ watch(routes, (list) => {
     .group-title {
       padding: 8px 16px 4px;
       font-size: 12px;
-      color: var(--text-secondary, #999);
+      color: var(--text-secondary);
     }
 
     .history-item {
-      padding-left: 10px;
+      padding-left: 12px;
 
       .history-remove {
         flex-shrink: 0;
-        padding: 6px;
-        color: var(--text-disabled, #bbb);
+        padding: 8px;
+        color: var(--text-disabled);
         cursor: pointer;
         border-radius: 4px;
 
         &:hover {
-          color: var(--color-danger, #f56c6c);
-          background: var(--bg-hover, #f5f5f5);
+          color: var(--color-danger);
+          background: var(--bg-hover);
         }
       }
     }
@@ -429,23 +429,23 @@ watch(routes, (list) => {
 
     .empty-icon {
       font-size: 42px;
-      color: var(--text-disabled, #e0e0e0);
-      margin-bottom: 14px;
+      color: var(--text-disabled);
+      margin-bottom: 16px;
     }
 
     .empty-text {
       font-size: 14px;
-      color: var(--text-secondary, #999);
-      margin: 0 0 6px;
+      color: var(--text-secondary);
+      margin: 0px 0px 8px;
 
       strong {
-        color: var(--text-regular, #666);
+        color: var(--text-regular);
       }
     }
 
     .empty-tip {
       font-size: 12px;
-      color: var(--text-disabled, #bbb);
+      color: var(--text-disabled);
       margin: 0;
     }
   }
@@ -455,15 +455,15 @@ watch(routes, (list) => {
   display: flex;
   align-items: center;
   gap: 28px;
-  padding: 10px 20px;
-  border-top: 1px solid var(--border-lighter, #f0f0f0);
-  color: var(--text-secondary, #999);
+  padding: 12px 20px;
+  border-top: 1px solid var(--border-lighter);
+  color: var(--text-secondary);
   font-size: 12px;
 
   .shortcut-item {
     display: flex;
     align-items: center;
-    gap: 5px;
+    gap: 4px;
   }
 
   kbd {
@@ -472,15 +472,15 @@ watch(routes, (list) => {
     justify-content: center;
     min-width: 20px;
     height: 20px;
-    padding: 0 5px;
-    border: 1px solid var(--border-base, #ddd);
+    padding: 0px 4px;
+    border: 1px solid var(--border-base);
     border-radius: 4px;
-    background: var(--bg-surface-2, #f7f7f7);
-    color: var(--text-regular, #555);
+    background: var(--bg-surface-2);
+    color: var(--text-regular);
     font-size: 11px;
     font-family: inherit;
     line-height: 1;
-    box-shadow: 0 1px 0 var(--border-base, #ccc);
+    box-shadow: 0 1px 0 var(--border-base);
   }
 }
 </style>

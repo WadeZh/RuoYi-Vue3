@@ -60,28 +60,29 @@ onMounted(() => {
 <style lang="scss">
 /* menu item */
 .topbar-menu.el-menu--horizontal .el-submenu__title, .topbar-menu.el-menu--horizontal .el-menu-item {
-  padding: 0 10px !important;
+  padding: 0px 12px !important;
 }
 
 .topbar-menu.el-menu--horizontal > .el-menu-item {
   float: left;
   height: 56px !important;
   line-height: 56px !important;
-  color: var(--text-primary, #303133) !important;
-  padding: 0 5px !important;
-  margin: 0 10px !important;
+  color: var(--text-primary) !important;
+  padding: 0px 4px !important;
+  margin: 0px 12px !important;
 }
 
-.el-sub-menu.is-active .svg-icon, .el-menu-item.is-active .svg-icon + span, .el-sub-menu.is-active .svg-icon + span, .el-sub-menu.is-active .el-sub-menu__title span {
-  color: v-bind(theme);
+.topbar-menu.el-menu--horizontal {
+  /* EP 官方激活色变量：文字与图标统一着色，避免手写 is-active 选择器 */
+  --el-menu-active-color: v-bind(theme);
 }
 
 /* sub-menu item */
 .topbar-menu.el-menu--horizontal > .el-sub-menu .el-sub-menu__title {
   float: left;
   line-height: 56px !important;
-  color: var(--text-primary, #303133) !important;
-  margin: 0 15px -3px!important;
+  color: var(--text-primary) !important;
+  margin: 0px 16px -4px !important;
 }
 
 /* topbar more arrow */

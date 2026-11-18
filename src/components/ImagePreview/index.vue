@@ -70,10 +70,10 @@ const realHeight = computed(() =>
 <style lang="scss" scoped>
 .el-image {
   border-radius: 5px;
-  background-color: var(--bg-surface-2, #ebeef5);
-  box-shadow: 0 0 5px 1px var(--border-base, #ccc);
+  background-color: var(--bg-surface-2);
+  box-shadow: 0 0 5px 1px var(--border-base);
   :deep(.el-image__inner) {
-    transition: all 0.3s;
+    transition: transform 0.3s;
     cursor: pointer;
     &:hover {
       transform: scale(1.2);
@@ -85,8 +85,15 @@ const realHeight = computed(() =>
     align-items: center;
     width: 100%;
     height: 100%;
-    color: var(--text-secondary, #909399);
+    color: var(--text-secondary);
     font-size: 30px;
   }
 }
+
+@media (prefers-reduced-motion: reduce) {
+  .el-image :deep(.el-image__inner) {
+    transition: none;
+  }
+}
+
 </style>
